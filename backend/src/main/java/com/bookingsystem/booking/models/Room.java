@@ -3,7 +3,7 @@ package com.bookingsystem.booking.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bookingsystem.booking.models.enums.Role;
+import com.bookingsystem.booking.models.enums.RoomType;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -17,38 +17,37 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "room")
+public class Room {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true, length = 50)
-    private String username;
+    private String name;
 
+    @Column(length = 200)
+    private String description;
+    
     @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false, unique = true, length = 100)
-    private String email;
+    private Integer capacity;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private RoomType type;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> bookings = new ArrayList<>();
 
-    public User() {
-    }
+    public Room() {}
 
-    public User(Long id, String username, String password, String email, Role role) {
+    public Room(Long id, String name, String description, Integer capacity, RoomType type) {
         this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.role = role;
+        this.name = name;
+        this.description = description;
+        this.capacity = capacity;
+        this.type = type;
     }
 
     public Long getId() {
@@ -59,36 +58,36 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getPassword() {
-        return password;
+    public String getDescription() {
+        return description;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getEmail() {
-        return email;
+    public Integer getCapacity() {
+        return capacity;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
     }
 
-    public Role getRole() {
-        return role;
+    public RoomType getType() {
+        return type;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setType(RoomType type) {
+        this.type = type;
     }
 
     public List<Booking> getBookings() {
@@ -102,13 +101,12 @@ public class User {
     public void addBooking(Booking booking) {
         if (!bookings.contains(booking)) {
             bookings.add(booking);
-            booking.setUser(this);
+            booking.setRoom(this);
         }
     }
 
     public void removeBooking(Booking booking) {
-        bookings.remove(booking); 
-        booking.setUser(null); 
+        bookings.remove(booking);
+        booking.setRoom(null);
     }
-
 }
