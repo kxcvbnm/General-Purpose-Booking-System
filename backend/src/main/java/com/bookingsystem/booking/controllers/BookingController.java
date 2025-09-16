@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bookingsystem.booking.dto.BookingRequest;
 import com.bookingsystem.booking.models.Booking;
 import com.bookingsystem.booking.services.BookingService;
 
@@ -25,10 +26,14 @@ public class BookingController {
     }
 
     @PostMapping
-    public ResponseEntity<Booking> createBooking(
-            @RequestParam Long userId,
-            @RequestParam Long roomId) {
-        Booking booking = bookingService.createBooking(userId, roomId);
+    public ResponseEntity<Booking> createBooking(@RequestBody BookingRequest bookingRequest) {
+        Booking booking = bookingService.createBooking(
+            bookingRequest.getUserId(),
+            bookingRequest.getRoomId(),
+            bookingRequest.getStartTime(),
+            bookingRequest.getEndTime()
+        );
+        
         return ResponseEntity.status(201).body(booking); // 201 Created
     }
 

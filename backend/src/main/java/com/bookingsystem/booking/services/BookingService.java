@@ -1,5 +1,6 @@
 package com.bookingsystem.booking.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class BookingService {
         this.roomRepository = roomRepository;
     }
 
-    public Booking createBooking(Long userId, Long roomId) {      
+    public Booking createBooking(Long userId, Long roomId, LocalDateTime startTime, LocalDateTime endTime) {      
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
         Room room = roomRepository.findById(roomId)
@@ -36,8 +37,10 @@ public class BookingService {
         Booking booking = new Booking();
         booking.setUser(user);
         booking.setRoom(room);
+        booking.setStartTime(startTime);
+        booking.setEndTime(endTime);
         booking.setStatus(BookingStatus.CONFIRMED);
-
+        
         return bookingRepository.save(booking);          
     }
 
