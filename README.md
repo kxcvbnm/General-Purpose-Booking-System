@@ -1,10 +1,10 @@
-📘 General-Purpose Booking System
+## 📘 General-Purpose Booking System
 
-🚧 This project is under active development.
+## 🚧 This project is under active development.
 
-A Spring Boot + PostgreSQL based booking system that can be adapted to different use cases such as music rooms, table tennis courts, or study rooms. Showcase clean backend architecture, DTO usage, and best practices for real-world systems.
+> A Spring Boot + PostgreSQL based booking system that can be adapted to different use cases such as music rooms, table tennis courts, or study rooms. Showcase clean backend architecture, DTO usage, and best practices for real-world systems.
 
-🚀 Features (current progress)
+## 🚀 Features (current progress)
 
 User Management
   - Create, fetch, and delete users
@@ -34,19 +34,19 @@ DTO + Mapper Architecture
   - Containerization: Docker & Docker Compose
   - API Testing: Postman
 
- 📂 Project Structure
+ ## 📂 Project Structure
  ```text
 src/main/java/com/bookingsystem/booking/
  ├─ controllers/        # REST controllers (User, Room, Booking)
  ├─ dto/                # Request & Response DTOs
  ├─ mappers/            # Entity ↔ DTO converters
  ├─ models/             # JPA entities
- | ├─ enums/
+ |├─ enums/
  ├─ repositories/       # Spring Data JPA repositories
  └─ services/           # Business logic
 ```
 
-📡 API Endpoints
+## 📡 API Endpoints
 Users
   - POST /api/users → Create a user
   - GET /api/users → Get all users
@@ -64,7 +64,7 @@ Bookings
   - GET /api/bookings → Get all bookings
   - GET /api/bookings/{id} → Get booking by ID
 
-📅 Roadmap
+## 📅 Roadmap
 - [x] User, Room, Booking entities
 - [x] Services with CRUD
 - [x] Controllers with Request/Response DTOs
