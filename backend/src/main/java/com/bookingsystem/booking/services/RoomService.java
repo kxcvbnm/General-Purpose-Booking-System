@@ -1,7 +1,6 @@
 package com.bookingsystem.booking.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -21,8 +20,10 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-    public Optional<Room> getRoomById(Long id) {
-        return roomRepository.findById(id);
+    public Room getRoomById(Long id) {
+        return roomRepository.findById(id)
+                             .orElseThrow(() -> new IllegalArgumentException(
+                                "Room not found " + id));
     }
 
     public List<Room> getAllRooms() {

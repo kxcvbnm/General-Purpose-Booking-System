@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bookingsystem.booking.dto.UserDTO;
+import com.bookingsystem.booking.mappers.UserMapper;
 import com.bookingsystem.booking.models.User;
 import com.bookingsystem.booking.services.UserService;
 
@@ -25,21 +27,20 @@ public class UserController {
     }
     
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody User user) {
         User createdUser = userService.createUser(user);
-        return ResponseEntity.status(201).body(createdUser); // 201 Created
+        return ResponseEntity.status(201).body(UserMapper.toDto(createdUser)); // 201 Created
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUser() {
-        return ResponseEntity.ok(userService.getAllUser());
+    public ResponseEntity<List<UserDTO>> getAllUser() {
+        return ResponseEntity.ok(UserMapper.toDtoList(userService.getAllUser()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(UserMapper.toDto(user));
     }
 
     @DeleteMapping("/{id}")

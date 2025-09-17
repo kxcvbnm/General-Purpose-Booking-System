@@ -3,11 +3,11 @@ package com.bookingsystem.booking.dto;
 import java.time.LocalDateTime;
 
 public class BookingRequest {
+    
     private Long userId;
     private Long roomId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    
 
     public Long getUserId() {
       return this.userId;

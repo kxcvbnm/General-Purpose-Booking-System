@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bookingsystem.booking.dto.BookingDTO;
 import com.bookingsystem.booking.dto.BookingRequest;
+import com.bookingsystem.booking.mappers.BookingMapper;
 import com.bookingsystem.booking.models.Booking;
 import com.bookingsystem.booking.services.BookingService;
 
@@ -26,7 +28,7 @@ public class BookingController {
     }
 
     @PostMapping
-    public ResponseEntity<Booking> createBooking(@RequestBody BookingRequest bookingRequest) {
+    public ResponseEntity<BookingDTO> createBooking(@RequestBody BookingRequest bookingRequest) {
         Booking booking = bookingService.createBooking(
             bookingRequest.getUserId(),
             bookingRequest.getRoomId(),
@@ -34,22 +36,24 @@ public class BookingController {
             bookingRequest.getEndTime()
         );
         
-        return ResponseEntity.status(201).body(booking); // 201 Created
+        return ResponseEntity.status(201).body(BookingMapper.toDto(booking)); // 201 Created
     }
 
     @PutMapping("/{id}/cancel")
-    public ResponseEntity<Booking> cancelBooking(@PathVariable Long id) {
+    public ResponseEntity<BookingDTO> cancelBooking(@PathVariable Long id) {
         Booking cancelled = bookingService.cancelBooking(id);
-        return ResponseEntity.ok(cancelled);
+        return ResponseEntity.ok(BookingMapper.toDto(cancelled));
     }
 
     @GetMapping
-    public ResponseEntity<List<Booking>> getAllBookings() {
-        return ResponseEntity.ok(bookingService.getAllBookings());
+    public ResponseEntity<List<BookingDTO>> getAllBookings() {
+        List<Booking> bookings = bookingService.getAllBookings();
+        return ResponseEntity.ok(BookingMapper.toDtoList(bookings));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Booking> getBookingById(@PathVariable Long id) {
-        return ResponseEntity.ok(bookingService.getBookingById(id));
+    public ResponseEntity<BookingDTO> getBookingById(@PathVariable Long id) {
+        Booking booking = bookingService.getBookingById(id);
+        return ResponseEntity.ok(BookingMapper.toDto(booking));
     }
 }
