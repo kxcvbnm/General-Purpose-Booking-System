@@ -1,6 +1,6 @@
 # 📘 General-Purpose Booking System
 
-# 🚧 This project is under active development.
+# 🚧 This project is under active development. Due to midterm exam
 
 > A Spring Boot + PostgreSQL based booking system that can be adapted to different use cases such as music rooms, table tennis courts, or study rooms. Showcase clean backend architecture, DTO usage, and best practices for real-world systems.
 
