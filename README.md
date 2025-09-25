@@ -68,14 +68,14 @@ src/main/java/com/bookingsystem/booking/
 - [x] Services with CRUD
 - [x] Controllers with Request/Response DTOs
 - [x] Mapper layer for clean API responses
-- [ ] Add validation (@NotNull, @Email, @Future)
-- [ ] Add global exception handling (@RestControllerAdvice)
-- [ ] Add authentication & JWT (for secure endpoints)
-- [ ] Add admin dashboard features (approve/cancel bookings)
-- [ ] Deploy backend on cloud (Render + Docker)
-- [ ] Frontend (React + TailwindCSS or Next.js)
+- [ ] Add validation
+- [ ] Add global exception handling
+- [ ] Add authentication & JWT
+- [ ] Add admin dashboard features
+- [ ] Deploy backend on cloud
+- [ ] Frontend
     - User-friendly UI for booking rooms
     - Login/Register pages
     - Booking calendar view
     - Admin panel for room/user management
-- [ ] Deploy frontend (Vercel) and connect with backend API
+- [ ] Deploy frontend and connect with backend API
