@@ -1,13 +1,24 @@
 package com.bookingsystem.booking.dto;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
 
 public class BookingRequest {
     
+    @NotNull(message = "User ID is required")
     private Long userId;
+
+    @NotNull(message = "Room ID is required")
     private Long roomId;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+
+    @NotNull(message = "Start time is required")
+    @FutureOrPresent(message = "Start time must be in the future")
+    private OffsetDateTime startTime;
+
+    @NotNull(message = "End time is required")
+    private OffsetDateTime endTime;
 
     public Long getUserId() {
       return this.userId;
@@ -23,17 +34,17 @@ public class BookingRequest {
       this.roomId = roomId;
     }
 
-    public LocalDateTime getStartTime() {
+    public OffsetDateTime getStartTime() {
       return this.startTime;
     }
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(OffsetDateTime startTime) {
       this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public OffsetDateTime getEndTime() {
       return this.endTime;
     }
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(OffsetDateTime endTime) {
       this.endTime = endTime;
     }
 }
