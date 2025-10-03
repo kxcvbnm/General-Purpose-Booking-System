@@ -3,7 +3,7 @@ package com.bookingsystem.booking.mappers;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.bookingsystem.booking.dto.RoomDTO;
+import com.bookingsystem.booking.dto.returndto.RoomDTO;
 import com.bookingsystem.booking.models.Room;
 
 public class RoomMapper {

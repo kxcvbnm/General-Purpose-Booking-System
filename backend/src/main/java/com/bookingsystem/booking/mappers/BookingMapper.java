@@ -3,7 +3,7 @@ package com.bookingsystem.booking.mappers;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.bookingsystem.booking.dto.BookingDTO;
+import com.bookingsystem.booking.dto.returndto.BookingDTO;
 import com.bookingsystem.booking.models.Booking;
 
 public class BookingMapper {

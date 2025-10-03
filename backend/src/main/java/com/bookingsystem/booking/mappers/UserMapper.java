@@ -3,7 +3,7 @@ package com.bookingsystem.booking.mappers;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.bookingsystem.booking.dto.UserDTO;
+import com.bookingsystem.booking.dto.returndto.UserDTO;
 import com.bookingsystem.booking.models.User;
 
 public class UserMapper {
