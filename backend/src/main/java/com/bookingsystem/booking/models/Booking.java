@@ -1,7 +1,7 @@
 package com.bookingsystem.booking.models;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import com.bookingsystem.booking.models.enums.BookingStatus;
 
@@ -33,13 +33,13 @@ public class Booking {
     private Room room;
 
     @Column(nullable = false)
-    private LocalDateTime startTime;
+    private OffsetDateTime startTime;
 
     @Column(nullable = false)
-    private LocalDateTime endTime;
+    private OffsetDateTime endTime;
     
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private OffsetDateTime createdAt = OffsetDateTime.now();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -47,13 +47,13 @@ public class Booking {
 
     public Booking() {}
 
-    public Booking(Long id, User user, Room room, LocalDateTime startTime, LocalDateTime endTime) {
+    public Booking(Long id, User user, Room room, OffsetDateTime startTime, OffsetDateTime endTime) {
         this.id = id;
         this.user = user;
         this.room = room;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.createdAt = LocalDateTime.now();  
+        this.createdAt = OffsetDateTime.now();  
         this.status = BookingStatus.PENDING;
     }
 
@@ -81,23 +81,23 @@ public class Booking {
         this.room = room;
     }
 
-    public LocalDateTime getStartTime() {
+    public OffsetDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(OffsetDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public OffsetDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(OffsetDateTime endTime) {
         this.endTime = endTime;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public OffsetDateTime getCreatedAt() {
       return this.createdAt;
     }
 

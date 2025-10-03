@@ -1,18 +1,18 @@
 package com.bookingsystem.booking.dto;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public class BookingDTO {
 
     private final Long id;
     private final Long userId;
     private final Long roomId;
-    private final LocalDateTime startTime;
-    private final LocalDateTime endTime;
+    private final OffsetDateTime startTime;
+    private final OffsetDateTime endTime;
     private final String status;
 
     public BookingDTO(Long id, Long userId, Long roomId,
-                      LocalDateTime startTime, LocalDateTime endTime,
+                      OffsetDateTime startTime, OffsetDateTime endTime,
                       String status) {
         this.id = id;
         this.userId = userId;
@@ -34,11 +34,11 @@ public class BookingDTO {
         return roomId;
     }
 
-    public LocalDateTime getStartTime() {
+    public OffsetDateTime getStartTime() {
         return startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public OffsetDateTime getEndTime() {
         return endTime;
     }
 

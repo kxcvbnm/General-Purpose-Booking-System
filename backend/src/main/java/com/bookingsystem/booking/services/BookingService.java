@@ -1,6 +1,6 @@
 package com.bookingsystem.booking.services;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class BookingService {
         this.roomRepository = roomRepository;
     }
 
-    public Booking createBooking(Long userId, Long roomId, LocalDateTime startTime, LocalDateTime endTime) {      
+    public Booking createBooking(Long userId, Long roomId, OffsetDateTime startTime, OffsetDateTime endTime) {      
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
         Room room = roomRepository.findById(roomId)
