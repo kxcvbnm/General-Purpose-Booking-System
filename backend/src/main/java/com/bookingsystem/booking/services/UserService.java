@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bookingsystem.booking.dto.requestdto.user.UserCreateRequest;
 import com.bookingsystem.booking.dto.requestdto.user.UserUpdateRequest;
+import com.bookingsystem.booking.exceptionhandlers.NotFoundException;
 import com.bookingsystem.booking.models.User;
 import com.bookingsystem.booking.repositories.UserRepository;
 import com.bookingsystem.booking.utils.PasswordHasher;
@@ -41,14 +42,14 @@ public class UserService {
 
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                             .orElseThrow(() -> new IllegalArgumentException("User not found " + id));
+                             .orElseThrow(() -> new NotFoundException("User not found " + id));
     }
 
     // Partial Update
     @Transactional
     public User updateUser(Long id, UserUpdateRequest req) {
         User user = userRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("User not found " + id));
+                    .orElseThrow(() -> new NotFoundException("User not found " + id));
         
         if(req.getUsername() != null) {
             user.setUsername(req.getUsername());
@@ -75,7 +76,7 @@ public class UserService {
     @Transactional
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new IllegalArgumentException("user not found: " + id);
+            throw new NotFoundException("user not found: " + id);
         }
         userRepository.deleteById(id);
     }
