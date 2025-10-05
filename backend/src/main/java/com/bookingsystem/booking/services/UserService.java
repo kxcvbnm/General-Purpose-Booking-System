@@ -7,7 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bookingsystem.booking.dto.requestdto.user.UserCreateRequest;
 import com.bookingsystem.booking.dto.requestdto.user.UserUpdateRequest;
+import com.bookingsystem.booking.dto.returndto.UserDTO;
 import com.bookingsystem.booking.exceptionhandlers.NotFoundException;
+import com.bookingsystem.booking.mappers.UserMapper;
 import com.bookingsystem.booking.models.User;
 import com.bookingsystem.booking.repositories.UserRepository;
 import com.bookingsystem.booking.utils.PasswordHasher;
@@ -24,7 +26,7 @@ public class UserService {
     }
 
     @Transactional
-    public User createUser(UserCreateRequest req) {
+    public UserDTO createUser(UserCreateRequest req) {
         if (userRepository.existsByEmailIgnoreCase(req.getEmail())) {
             throw new IllegalStateException("Email already exists"); 
         }
@@ -33,23 +35,27 @@ public class UserService {
         user.setEmail(req.getEmail());
         user.setPassword(passwordHasher.hash(req.getPassword()));
         user.setRole(req.getRole());
-        return userRepository.save(user);
+
+        User saved = userRepository.save(user);
+        return UserMapper.toDto(saved);
     }
 
-    public List<User> getAllUser() {
-        return userRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<UserDTO> getAllUser() {
+        return UserMapper.toDtoList(userRepository.findAll());
     }
 
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
-                             .orElseThrow(() -> new NotFoundException("User not found " + id));
+    public UserDTO getUserById(Long id) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("User not found " + id));
+        return UserMapper.toDto(user);
     }
 
     // Partial Update
     @Transactional
-    public User updateUser(Long id, UserUpdateRequest req) {
+    public UserDTO updateUser(Long id, UserUpdateRequest req) {
         User user = userRepository.findById(id)
-                    .orElseThrow(() -> new NotFoundException("User not found " + id));
+            .orElseThrow(() -> new NotFoundException("User not found " + id));
         
         if(req.getUsername() != null) {
             user.setUsername(req.getUsername());
@@ -69,7 +75,9 @@ public class UserService {
         if(req.getRole() != null) {
             user.setRole(req.getRole());
         }
-        return userRepository.save(user);
+
+        User saved = userRepository.save(user);
+        return UserMapper.toDto(saved);
     }
 
     // Soft Delete

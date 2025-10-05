@@ -4,7 +4,11 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.bookingsystem.booking.dto.returndto.BookingDTO;
+import com.bookingsystem.booking.exceptionhandlers.NotFoundException;
+import com.bookingsystem.booking.mappers.BookingMapper;
 import com.bookingsystem.booking.models.Booking;
 import com.bookingsystem.booking.models.Room;
 import com.bookingsystem.booking.models.User;
@@ -28,11 +32,12 @@ public class BookingService {
         this.roomRepository = roomRepository;
     }
 
-    public Booking createBooking(Long userId, Long roomId, OffsetDateTime startTime, OffsetDateTime endTime) {      
+    @Transactional
+    public BookingDTO createBooking(Long userId, Long roomId, OffsetDateTime startTime, OffsetDateTime endTime) {      
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+            .orElseThrow(() -> new NotFoundException("User not found"));
         Room room = roomRepository.findById(roomId)
-            .orElseThrow(() -> new IllegalArgumentException("Room not found")); 
+            .orElseThrow(() -> new NotFoundException("Room not found")); 
 
         Booking booking = new Booking();
         booking.setUser(user);
@@ -41,24 +46,27 @@ public class BookingService {
         booking.setEndTime(endTime);
         booking.setStatus(BookingStatus.CONFIRMED);
         
-        return bookingRepository.save(booking);          
+        Booking saved = bookingRepository.save(booking);
+        return BookingMapper.toDto(saved);          
     }
 
-    public Booking cancelBooking(Long bookingId) {
+    @Transactional
+    public BookingDTO cancelBooking(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
+                .orElseThrow(() -> new NotFoundException("Booking not found"));
         booking.setStatus(BookingStatus.CANCELLED);
         
-        return bookingRepository.save(booking);
+        return BookingMapper.toDto(bookingRepository.save(booking));
     }
 
-    public List<Booking> getAllBookings() {
-        return bookingRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<BookingDTO> getAllBookings() {
+        return BookingMapper.toDtoList(bookingRepository.findAll());
     }
 
-    public Booking getBookingById(Long id) {
-        return bookingRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
-    }
-    
+    public BookingDTO getBookingById(Long id) {
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Booking not found"));
+        return BookingMapper.toDto(booking);
+    }  
 }

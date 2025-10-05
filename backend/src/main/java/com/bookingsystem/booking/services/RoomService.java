@@ -4,8 +4,14 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.bookingsystem.booking.dto.requestdto.room.RoomCreateRequest;
+import com.bookingsystem.booking.dto.returndto.RoomDTO;
+import com.bookingsystem.booking.exceptionhandlers.NotFoundException;
+import com.bookingsystem.booking.mappers.RoomMapper;
 import com.bookingsystem.booking.models.Room;
 import com.bookingsystem.booking.repositories.RoomRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class RoomService {
@@ -16,23 +22,30 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
-    public Room createRoom(Room room) {
-        return roomRepository.save(room);
+    @Transactional
+    public RoomDTO createRoom(RoomCreateRequest req) {
+        Room room = new Room();
+        room.setName(req.getName());
+        Room saved = roomRepository.save(room);
+        return RoomMapper.toDto(saved);
     }
 
-    public Room getRoomById(Long id) {
-        return roomRepository.findById(id)
-                             .orElseThrow(() -> new IllegalArgumentException(
-                                "Room not found " + id));
+    @Transactional(readOnly = true)
+    public RoomDTO getRoomById(Long id) {
+        Room room = roomRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Room not found" + id));
+        return RoomMapper.toDto(room);
     }
 
-    public List<Room> getAllRooms() {
-        return roomRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<RoomDTO> getAllRooms() {
+        return RoomMapper.toDtoList(roomRepository.findAll());
     }
 
+    @Transactional
     public void deleteRoom(Long id) {
         if(!roomRepository.existsById(id)) {
-            throw new IllegalArgumentException("Room not found");
+            throw new NotFoundException("Room not found");
         }
         roomRepository.deleteById(id);
     }
