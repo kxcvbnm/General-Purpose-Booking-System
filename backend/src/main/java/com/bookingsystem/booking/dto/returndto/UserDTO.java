@@ -1,13 +1,15 @@
 package com.bookingsystem.booking.dto.returndto;
 
+import com.bookingsystem.booking.models.enums.Role;
+
 public class UserDTO {
 
     private final Long id;
     private final String username;
     private final String email;
-    private final String role;
+    private final Role role;
 
-    public UserDTO(Long id, String username, String email, String role) {
+    public UserDTO(Long id, String username, String email, Role role) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -26,7 +28,7 @@ public class UserDTO {
       return this.email;
     }
 
-    public String getRole() {
+    public Role getRole() {
       return this.role;
     }
 

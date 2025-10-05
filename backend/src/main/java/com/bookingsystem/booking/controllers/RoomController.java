@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bookingsystem.booking.dto.RoomDTO;
-import com.bookingsystem.booking.mappers.RoomMapper;
-import com.bookingsystem.booking.models.Room;
+import com.bookingsystem.booking.dto.requestdto.room.RoomCreateRequest;
+import com.bookingsystem.booking.dto.returndto.RoomDTO;
 import com.bookingsystem.booking.services.RoomService;
 
 @RestController
@@ -27,20 +26,19 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<RoomDTO> createRoom(@RequestBody Room room) {
-        Room createdRoom = roomService.createRoom(room);
-        return ResponseEntity.status(201).body(RoomMapper.toDto(createdRoom)); // 201 Created
+    public ResponseEntity<RoomDTO> createRoom(@RequestBody RoomCreateRequest req) {
+        RoomDTO body = roomService.createRoom(req);
+        return ResponseEntity.status(201).body(body); // 201 Created
     }
 
     @GetMapping
     public ResponseEntity<List<RoomDTO>> getAllRooms() {
-        return ResponseEntity.ok(RoomMapper.toDtoList(roomService.getAllRooms()));
+        return ResponseEntity.ok(roomService.getAllRooms());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<RoomDTO> getRoomById(@PathVariable Long id) {
-        Room room = roomService.getRoomById(id);
-        return ResponseEntity.ok(RoomMapper.toDto(room));
+        return ResponseEntity.ok(roomService.getRoomById(id));
     }
 
     @DeleteMapping("/{id}")

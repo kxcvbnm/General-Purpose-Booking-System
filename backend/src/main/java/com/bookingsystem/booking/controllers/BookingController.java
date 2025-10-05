@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bookingsystem.booking.dto.BookingDTO;
-import com.bookingsystem.booking.dto.BookingRequest;
-import com.bookingsystem.booking.mappers.BookingMapper;
-import com.bookingsystem.booking.models.Booking;
+import com.bookingsystem.booking.dto.requestdto.BookingRequest;
+import com.bookingsystem.booking.dto.returndto.BookingDTO;
 import com.bookingsystem.booking.services.BookingService;
 
 @RestController
@@ -29,31 +27,28 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<BookingDTO> createBooking(@RequestBody BookingRequest bookingRequest) {
-        Booking booking = bookingService.createBooking(
+        BookingDTO body = bookingService.createBooking(
             bookingRequest.getUserId(),
             bookingRequest.getRoomId(),
             bookingRequest.getStartTime(),
             bookingRequest.getEndTime()
         );
         
-        return ResponseEntity.status(201).body(BookingMapper.toDto(booking)); // 201 Created
+        return ResponseEntity.status(201).body(body); // 201 Created
     }
 
     @PutMapping("/{id}/cancel")
     public ResponseEntity<BookingDTO> cancelBooking(@PathVariable Long id) {
-        Booking cancelled = bookingService.cancelBooking(id);
-        return ResponseEntity.ok(BookingMapper.toDto(cancelled));
+        return ResponseEntity.ok(bookingService.cancelBooking(id));
     }
 
     @GetMapping
     public ResponseEntity<List<BookingDTO>> getAllBookings() {
-        List<Booking> bookings = bookingService.getAllBookings();
-        return ResponseEntity.ok(BookingMapper.toDtoList(bookings));
+        return ResponseEntity.ok(bookingService.getAllBookings());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BookingDTO> getBookingById(@PathVariable Long id) {
-        Booking booking = bookingService.getBookingById(id);
-        return ResponseEntity.ok(BookingMapper.toDto(booking));
-    }
+        return ResponseEntity.ok(bookingService.getBookingById(id));
+    } 
 }

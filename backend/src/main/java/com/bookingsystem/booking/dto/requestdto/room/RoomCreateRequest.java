@@ -1,10 +1,17 @@
 package com.bookingsystem.booking.dto.requestdto.room;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
 
-public record RoomCreateRequest(
+public class RoomCreateRequest {
     
-    @NotBlank String name,
-    @Positive int capacity
-) {}
+    @NotBlank
+    private String name;
+
+    public String getName() { 
+        return name; 
+    }
+    
+    public void setName(String name) { 
+        this.name = name; 
+    }
+}

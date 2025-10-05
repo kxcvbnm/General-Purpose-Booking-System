@@ -17,8 +17,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.bookingsystem.booking.dto.requestdto.user.UserCreateRequest;
 import com.bookingsystem.booking.dto.requestdto.user.UserUpdateRequest;
 import com.bookingsystem.booking.dto.returndto.UserDTO;
-import com.bookingsystem.booking.mappers.UserMapper;
-import com.bookingsystem.booking.models.User;
 import com.bookingsystem.booking.services.UserService;
 
 import jakarta.validation.Valid;
@@ -36,31 +34,27 @@ public class UserController {
     
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserCreateRequest req) {
-        User createdUser = userService.createUser(req);
-        UserDTO body = UserMapper.toDto(createdUser);
+        UserDTO body = userService.createUser(req);
         URI location = ServletUriComponentsBuilder
                        .fromCurrentRequest().path("/{id}")
-                       .buildAndExpand(createdUser.getId()).toUri();
+                       .buildAndExpand(body.getId()).toUri();
         return ResponseEntity.created(location).body(body); // 201 Created
     }
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUser() {
-        List<User> users = userService.getAllUser();
-        return ResponseEntity.ok(UserMapper.toDtoList(users));
+        return ResponseEntity.ok(userService.getAllUser());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id);
-        return ResponseEntity.ok(UserMapper.toDto(user));
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, 
                                               @Valid @RequestBody UserUpdateRequest req) {
-        User updated = userService.updateUser(id, req);
-        return ResponseEntity.ok(UserMapper.toDto(updated));
+        return ResponseEntity.ok(userService.updateUser(id, req));
     }
 
     @DeleteMapping("/{id}")
