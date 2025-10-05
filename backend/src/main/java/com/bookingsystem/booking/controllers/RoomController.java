@@ -15,6 +15,8 @@ import com.bookingsystem.booking.dto.requestdto.room.RoomCreateRequest;
 import com.bookingsystem.booking.dto.returndto.RoomDTO;
 import com.bookingsystem.booking.services.RoomService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/rooms")
 public class RoomController {
@@ -26,7 +28,7 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<RoomDTO> createRoom(@RequestBody RoomCreateRequest req) {
+    public ResponseEntity<RoomDTO> createRoom(@Valid @RequestBody RoomCreateRequest req) {
         RoomDTO body = roomService.createRoom(req);
         return ResponseEntity.status(201).body(body); // 201 Created
     }

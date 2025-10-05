@@ -11,7 +11,8 @@ public class RoomMapper {
     public static RoomDTO toDto(Room room) {
         return new RoomDTO(
             room.getId(),
-            room.getName()
+            room.getName(),
+            room.getType()
         );
     }
 

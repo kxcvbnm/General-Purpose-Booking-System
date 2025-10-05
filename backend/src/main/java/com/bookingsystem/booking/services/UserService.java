@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bookingsystem.booking.dto.requestdto.user.UserCreateRequest;
 import com.bookingsystem.booking.dto.requestdto.user.UserUpdateRequest;
 import com.bookingsystem.booking.dto.returndto.UserDTO;
+import com.bookingsystem.booking.exceptionhandlers.ConflictException;
 import com.bookingsystem.booking.exceptionhandlers.NotFoundException;
 import com.bookingsystem.booking.mappers.UserMapper;
 import com.bookingsystem.booking.models.User;
@@ -28,7 +29,7 @@ public class UserService {
     @Transactional
     public UserDTO createUser(UserCreateRequest req) {
         if (userRepository.existsByEmailIgnoreCase(req.getEmail())) {
-            throw new IllegalStateException("Email already exists"); 
+            throw new ConflictException("Email already exists"); 
         }
         User user = new User();
         user.setUsername(req.getUsername());
@@ -63,7 +64,7 @@ public class UserService {
 
         if(req.getEmail() != null) {
             if(userRepository.existsByEmailIgnoreCaseAndIdNot(req.getEmail(), id)) {
-                throw new IllegalStateException("Email already exists"); 
+                throw new ConflictException("Email already exists"); 
             }
             user.setEmail(req.getEmail());
         }

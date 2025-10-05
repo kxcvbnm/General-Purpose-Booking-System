@@ -3,15 +3,16 @@ package com.bookingsystem.booking.services;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bookingsystem.booking.dto.requestdto.room.RoomCreateRequest;
 import com.bookingsystem.booking.dto.returndto.RoomDTO;
+import com.bookingsystem.booking.exceptionhandlers.ConflictException;
 import com.bookingsystem.booking.exceptionhandlers.NotFoundException;
 import com.bookingsystem.booking.mappers.RoomMapper;
 import com.bookingsystem.booking.models.Room;
 import com.bookingsystem.booking.repositories.RoomRepository;
 
-import jakarta.transaction.Transactional;
 
 @Service
 public class RoomService {
@@ -24,8 +25,17 @@ public class RoomService {
 
     @Transactional
     public RoomDTO createRoom(RoomCreateRequest req) {
+        
+        if (roomRepository.existsByNameIgnoreCase(req.getName())) {
+            throw new ConflictException("Room name already exists");
+        }
+       
         Room room = new Room();
         room.setName(req.getName());
+        room.setDescription(req.getDescription());
+        room.setCapacity(req.getCapacity());
+        room.setType(req.getType());
+        
         Room saved = roomRepository.save(room);
         return RoomMapper.toDto(saved);
     }
