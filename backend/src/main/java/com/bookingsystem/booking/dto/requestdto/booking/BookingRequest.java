@@ -1,4 +1,4 @@
-package com.bookingsystem.booking.dto.requestdto;
+package com.bookingsystem.booking.dto.requestdto.booking;
 
 import java.time.OffsetDateTime;
 

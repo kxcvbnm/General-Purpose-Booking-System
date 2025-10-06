@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bookingsystem.booking.dto.requestdto.BookingRequest;
+import com.bookingsystem.booking.dto.requestdto.booking.BookingRequest;
 import com.bookingsystem.booking.dto.returndto.BookingDTO;
 import com.bookingsystem.booking.services.BookingService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/bookings")
@@ -26,7 +28,7 @@ public class BookingController {
     }
 
     @PostMapping
-    public ResponseEntity<BookingDTO> createBooking(@RequestBody BookingRequest bookingRequest) {
+    public ResponseEntity<BookingDTO> createBooking(@Valid @RequestBody BookingRequest bookingRequest) {
         BookingDTO body = bookingService.createBooking(
             bookingRequest.getUserId(),
             bookingRequest.getRoomId(),

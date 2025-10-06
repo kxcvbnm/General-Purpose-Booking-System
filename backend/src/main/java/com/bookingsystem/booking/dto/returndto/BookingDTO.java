@@ -2,6 +2,8 @@ package com.bookingsystem.booking.dto.returndto;
 
 import java.time.OffsetDateTime;
 
+import com.bookingsystem.booking.models.enums.BookingStatus;
+
 public class BookingDTO {
 
     private final Long id;
@@ -9,11 +11,11 @@ public class BookingDTO {
     private final Long roomId;
     private final OffsetDateTime startTime;
     private final OffsetDateTime endTime;
-    private final String status;
+    private final BookingStatus status;
 
     public BookingDTO(Long id, Long userId, Long roomId,
                       OffsetDateTime startTime, OffsetDateTime endTime,
-                      String status) {
+                      BookingStatus status) {
         this.id = id;
         this.userId = userId;
         this.roomId = roomId;
@@ -42,7 +44,7 @@ public class BookingDTO {
         return endTime;
     }
 
-    public String getStatus() {
+    public BookingStatus getStatus() {
         return status;
     }
 
