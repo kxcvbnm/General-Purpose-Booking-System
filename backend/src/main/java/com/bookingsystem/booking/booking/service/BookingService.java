@@ -1,5 +1,6 @@
 package com.bookingsystem.booking.booking.service;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import com.bookingsystem.booking.booking.domain.entities.Booking;
 import com.bookingsystem.booking.booking.domain.enums.BookingStatus;
 import com.bookingsystem.booking.room.data.RoomRepository;
 import com.bookingsystem.booking.room.domain.entities.Room;
+import com.bookingsystem.booking.shared.error.BusinessRuleViolationException;
 import com.bookingsystem.booking.shared.error.NotFoundException;
 import com.bookingsystem.booking.user.data.UserRepository;
 import com.bookingsystem.booking.user.domain.entities.User;
@@ -34,13 +36,43 @@ public class BookingService {
 
     @Transactional
     public BookingDTO createBooking(Long userId, Long roomId, OffsetDateTime startTime, OffsetDateTime endTime) {      
+        
+        if(userId == null || roomId == null || startTime == null || endTime == null) {
+            throw new BusinessRuleViolationException("Missing required fields.");
+        }
+
+        if(!startTime.isBefore(endTime)) {
+            throw new BusinessRuleViolationException("Start time must be before end time.");
+        }
+
+        if(startTime.isBefore(OffsetDateTime.now())) {
+            throw new BusinessRuleViolationException("Start time must be in the future.");
+        }
+
+        long minutes = Duration.between(startTime, endTime).toMinutes();
+        
+        if(minutes < 60) {
+            throw new BusinessRuleViolationException("Minimum booking duration is 60 minutes.");
+        }
+
+        if(minutes > 120) {
+            throw new BusinessRuleViolationException("Maximum booking duration is 120 minutes.");
+        }
+
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("User not found"));
-        Room room = roomRepository.findById(roomId)
+        
+        Room room = roomRepository.findByIdForUpdate(roomId)
             .orElseThrow(() -> new NotFoundException("Room not found")); 
 
         //check booking time in the same room shouldn't collapse
-        
+        if(bookingRepository.existsOverlapForUser(userId, startTime, endTime, BookingStatus.CONFIRMED)) {
+            throw new BusinessRuleViolationException("User already has a booking at this time.");
+        }
+
+        if(bookingRepository.existsOverlapForRoom(roomId, startTime, endTime, BookingStatus.CONFIRMED)) {
+            throw new BusinessRuleViolationException("Room already has a booking at this time.");
+        }
         
         Booking booking = new Booking();
         booking.setUser(user);
