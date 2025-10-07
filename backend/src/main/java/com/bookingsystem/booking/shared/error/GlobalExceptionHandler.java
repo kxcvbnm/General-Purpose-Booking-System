@@ -25,4 +25,11 @@ public class GlobalExceptionHandler {
         ));
     }
 
+    @ExceptionHandler(BusinessRuleViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleBusiness(BusinessRuleViolationException ex) {
+        return ResponseEntity.status(400).body(Map.of(
+            "error", "business_rule_violation",
+            "message", ex.getMessage()
+        ));
+    }
 }
