@@ -68,8 +68,8 @@ src/main/java/com/bookingsystem/booking/
 - [x] Services with CRUD
 - [x] Controllers with Request/Response DTOs
 - [x] Mapper layer for clean API responses
-- [ ] Add validation
-- [ ] Add global exception handling
+- [x] Add validation
+- [x] Add global exception handling
 - [ ] Add authentication & JWT
 - [ ] Add admin dashboard features
 - [ ] Deploy backend on cloud
@@ -78,4 +78,4 @@ src/main/java/com/bookingsystem/booking/
     - Login/Register pages
     - Booking calendar view
     - Admin panel for room/user management
-- [ ] Deploy frontend and connect with backend API
+- [ ] Connect frontend with backend then deploy
