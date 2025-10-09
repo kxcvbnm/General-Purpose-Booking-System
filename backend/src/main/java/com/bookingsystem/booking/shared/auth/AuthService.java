@@ -1,72 +1,94 @@
 package com.bookingsystem.booking.shared.auth;
 
 import java.time.OffsetDateTime;
+import static java.time.ZoneOffset.UTC;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.bookingsystem.booking.shared.auth.dto.LoginRequest;
 import com.bookingsystem.booking.shared.auth.dto.RefreshRequest;
 import com.bookingsystem.booking.shared.auth.dto.TokenResponse;
+import com.bookingsystem.booking.shared.auth.tokens.RefreshToken;
 import com.bookingsystem.booking.shared.auth.tokens.RefreshTokenService;
-import com.bookingsystem.booking.shared.security.CustomUserDetailService;
+import com.bookingsystem.booking.shared.security.CustomUserDetailsService;
 import com.bookingsystem.booking.shared.security.JwtService;
 import com.bookingsystem.booking.shared.security.UserPrincipal;
 import com.bookingsystem.booking.user.data.UserRepository;
+import com.bookingsystem.booking.user.domain.entities.User;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 
 @Service
 public class AuthService {
     
     private final AuthenticationManager authenticationManager;
-    private final CustomUserDetailService customUserDetailService;
+    private final CustomUserDetailsService customUserDetailsService;
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final RefreshTokenService refreshTokenService;
 
-    public AuthService(AuthenticationManager authenticationManager, CustomUserDetailService customUserDetailService, JwtService jwtService, UserRepository userRepository, RefreshTokenService refreshTokenService) {
+    public AuthService(AuthenticationManager authenticationManager, CustomUserDetailsService customUserDetailsService, JwtService jwtService, UserRepository userRepository, RefreshTokenService refreshTokenService) {
         
         this.authenticationManager = authenticationManager;
-        this.customUserDetailService = customUserDetailService;
+        this.customUserDetailsService = customUserDetailsService;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.refreshTokenService = refreshTokenService;
     }
 
     public TokenResponse login(LoginRequest req) {
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                req.email(), req.password()));        
-    
-        var principal = (UserPrincipal) customUserDetailService.loadUserByUsername(req.email());
-        var accessToken = jwtService.generateAccessToken(principal);
-        var refreshToken = jwtService.generateRefreshToken(principal);
+        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(req.email(), req.password());
+        Authentication authentication = authenticationManager.authenticate(authRequest);
 
-        var user = userRepository.findByEmailIgnoreCase(req.email())
-                            .orElseThrow();
-        refreshTokenService.store(user, refreshToken, OffsetDateTime.now().plusDays(7));
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
 
+        // Generate tokens
+        String accessToken  = jwtService.generateAccessToken(principal);
+        String refreshToken = jwtService.generateRefreshToken(principal);
+
+        // Store refresh token
+        Claims refreshClaims = jwtService.parse(refreshToken).getBody();
+        OffsetDateTime refreshExpiresAt = OffsetDateTime.ofInstant(
+            refreshClaims.getExpiration().toInstant(), UTC);
+
+        // Load User entity and store hashed refresh
+        User user = userRepository.findById(principal.getId()).orElseThrow();
+
+        refreshTokenService.store(user, refreshToken, refreshExpiresAt);
+
+        // Return DTO
         return new TokenResponse(accessToken, refreshToken);
     }
 
     public TokenResponse refresh(RefreshRequest req) {
-        var jws = jwtService.parse(req.refreshToken());
-        
-        if(!"refresh".equals(jws.getBody().get("type")))
+        Jws<Claims> jws = jwtService.parse(req.refreshToken());
+
+        if (!"refresh".equals(jws.getBody().get("type", String.class))) {
             throw new IllegalArgumentException("Invalid refresh token");
-        
-        var valid = refreshTokenService.findValid(req.refreshToken())
-                                    .orElseThrow(() -> new IllegalArgumentException("Invalid refresh token")); 
+        }
+
+        RefreshToken valid = refreshTokenService.findValid(req.refreshToken())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid refresh token"));
+
         refreshTokenService.rotate(valid);
 
-        var userId = Long.parseLong(jws.getBody().getSubject());
-        var user = userRepository.findById(userId)
-                                .orElseThrow();
-        var principal = new UserPrincipal(user);
+        Long userId = Long.valueOf(jws.getBody().getSubject());
+        User user = userRepository.findById(userId).orElseThrow();
 
-        var newAccessToken = jwtService.generateAccessToken(principal);
-        var newRefreshToken = jwtService.generateRefreshToken(principal);
-        refreshTokenService.store(user, newRefreshToken, OffsetDateTime.now().plusDays(7));
+        UserPrincipal principal = new UserPrincipal(user);
+
+        String newAccessToken  = jwtService.generateAccessToken(principal);
+        String newRefreshToken = jwtService.generateRefreshToken(principal);
+
+        Claims newRefreshClaims = jwtService.parse(newRefreshToken).getBody();
+        OffsetDateTime newRefreshExpiresAt = OffsetDateTime.ofInstant(
+            newRefreshClaims.getExpiration().toInstant(), UTC);
+
+        refreshTokenService.store(user, newRefreshToken, newRefreshExpiresAt);
 
         return new TokenResponse(newAccessToken, newRefreshToken);    
     }
