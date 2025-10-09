@@ -32,4 +32,21 @@ public class GlobalExceptionHandler {
             "message", ex.getMessage()
         ));
     }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<Map<String, Object>> handleTokenExpired(TokenExpiredException ex) {
+        return ResponseEntity.status(403).body(Map.of(
+            "error", "token_expired",
+            "message", ex.getMessage()
+        ));
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidToken(InvalidTokenException ex) {
+        return ResponseEntity.status(401).body(Map.of(
+            "error", "invalid_token",
+            "message", ex.getMessage()
+        ));
+    }
+
 }
