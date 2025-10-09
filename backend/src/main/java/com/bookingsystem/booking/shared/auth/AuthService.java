@@ -13,7 +13,7 @@ import com.bookingsystem.booking.shared.auth.dto.RefreshRequest;
 import com.bookingsystem.booking.shared.auth.dto.TokenResponse;
 import com.bookingsystem.booking.shared.auth.tokens.RefreshToken;
 import com.bookingsystem.booking.shared.auth.tokens.RefreshTokenService;
-import com.bookingsystem.booking.shared.security.CustomUserDetailsService;
+import com.bookingsystem.booking.shared.error.InvalidTokenException;
 import com.bookingsystem.booking.shared.security.JwtService;
 import com.bookingsystem.booking.shared.security.UserPrincipal;
 import com.bookingsystem.booking.user.data.UserRepository;
@@ -26,15 +26,13 @@ import io.jsonwebtoken.Jws;
 public class AuthService {
     
     private final AuthenticationManager authenticationManager;
-    private final CustomUserDetailsService customUserDetailsService;
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final RefreshTokenService refreshTokenService;
 
-    public AuthService(AuthenticationManager authenticationManager, CustomUserDetailsService customUserDetailsService, JwtService jwtService, UserRepository userRepository, RefreshTokenService refreshTokenService) {
+    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, UserRepository userRepository, RefreshTokenService refreshTokenService) {
         
         this.authenticationManager = authenticationManager;
-        this.customUserDetailsService = customUserDetailsService;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.refreshTokenService = refreshTokenService;
@@ -68,11 +66,11 @@ public class AuthService {
         Jws<Claims> jws = jwtService.parse(req.refreshToken());
 
         if (!"refresh".equals(jws.getBody().get("type", String.class))) {
-            throw new IllegalArgumentException("Invalid refresh token");
+            throw new InvalidTokenException("Invalid refresh token");
         }
 
         RefreshToken valid = refreshTokenService.findValid(req.refreshToken())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid refresh token"));
+                .orElseThrow(() -> new InvalidTokenException("Invalid refresh token"));
 
         refreshTokenService.rotate(valid);
 
