@@ -49,4 +49,12 @@ public class GlobalExceptionHandler {
         ));
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDenied(AccessDeniedException ex) {
+        return ResponseEntity.status(403).body(Map.of(
+            "error", "invalid_token",
+            "message", ex.getMessage()
+        ));
+    }
+
 }
