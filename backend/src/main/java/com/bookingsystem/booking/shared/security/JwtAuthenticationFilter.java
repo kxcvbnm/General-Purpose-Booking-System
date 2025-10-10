@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
+import com.bookingsystem.booking.shared.error.InvalidTokenException;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,9 +54,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
                     SecurityContextHolder.getContext().setAuthentication(authToken); 
                 }    
-            } catch(Exception ex) {
+            } catch(InvalidTokenException ex) {
                 handlerExceptionResolver.resolveException(req, res, null, ex);
-            }
+            } 
         }
         filterChain.doFilter(req, res);
     }
