@@ -10,8 +10,8 @@ import com.bookingsystem.booking.room.api.dtos.response.RoomDTO;
 import com.bookingsystem.booking.room.api.mappers.RoomMapper;
 import com.bookingsystem.booking.room.data.RoomRepository;
 import com.bookingsystem.booking.room.domain.entities.Room;
-import com.bookingsystem.booking.shared.error.ConflictException;
-import com.bookingsystem.booking.shared.error.NotFoundException;
+import com.bookingsystem.booking.shared.error.exception.ConflictException;
+import com.bookingsystem.booking.shared.error.exception.NotFoundException;
 
 
 @Service
