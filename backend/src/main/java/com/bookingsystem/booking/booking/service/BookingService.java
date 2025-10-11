@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +15,11 @@ import com.bookingsystem.booking.booking.domain.entities.Booking;
 import com.bookingsystem.booking.booking.domain.enums.BookingStatus;
 import com.bookingsystem.booking.room.data.RoomRepository;
 import com.bookingsystem.booking.room.domain.entities.Room;
-import com.bookingsystem.booking.shared.error.BusinessRuleViolationException;
-import com.bookingsystem.booking.shared.error.NotFoundException;
+import com.bookingsystem.booking.shared.error.exception.BusinessRuleViolationException;
+import com.bookingsystem.booking.shared.error.exception.NotFoundException;
 import com.bookingsystem.booking.user.data.UserRepository;
 import com.bookingsystem.booking.user.domain.entities.User;
+import com.bookingsystem.booking.user.domain.enums.Role;
 
 @Service
 public class BookingService {
@@ -86,9 +88,20 @@ public class BookingService {
     }
 
     @Transactional
-    public BookingDTO cancelBooking(Long bookingId) {
+    public BookingDTO cancelBooking(Long bookingId, Long userId, Role role) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Booking not found"));
+        
+        boolean isBooker = booking.getUser().getId().equals(userId);
+        boolean isAdmin = role == Role.ADMIN;
+        if(!isBooker && !isAdmin) {
+            throw new AccessDeniedException("you can only cancel your own bookings");
+        }
+
+        if(booking.getStatus() == BookingStatus.CANCELLED) {
+            return BookingMapper.toDto(booking);
+        }
+
         booking.setStatus(BookingStatus.CANCELLED);
         
         return BookingMapper.toDto(bookingRepository.save(booking));

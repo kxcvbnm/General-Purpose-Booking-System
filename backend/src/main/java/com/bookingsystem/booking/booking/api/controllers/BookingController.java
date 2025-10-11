@@ -1,8 +1,10 @@
 package com.bookingsystem.booking.booking.api.controllers;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bookingsystem.booking.booking.api.dtos.request.BookingRequest;
 import com.bookingsystem.booking.booking.api.dtos.response.BookingDTO;
 import com.bookingsystem.booking.booking.service.BookingService;
+import com.bookingsystem.booking.shared.security.UserPrincipal;
 
 import jakarta.validation.Valid;
 
@@ -28,20 +31,24 @@ public class BookingController {
     }
 
     @PostMapping
-    public ResponseEntity<BookingDTO> createBooking(@Valid @RequestBody BookingRequest bookingRequest) {
+    public ResponseEntity<BookingDTO> createBooking(@Valid @RequestBody BookingRequest bookingRequest,
+                                                    @AuthenticationPrincipal UserPrincipal userPrincipal) {
         BookingDTO body = bookingService.createBooking(
-            bookingRequest.getUserId(),
+            userPrincipal.getId(),
             bookingRequest.getRoomId(),
             bookingRequest.getStartTime(),
             bookingRequest.getEndTime()
         );
         
-        return ResponseEntity.status(201).body(body); // 201 Created
+        return ResponseEntity.created(URI.create("/api/bookings/" + body.getId())).body(body); // 201 Created
     }
 
     @PutMapping("/{id}/cancel")
-    public ResponseEntity<BookingDTO> cancelBooking(@PathVariable Long id) {
-        return ResponseEntity.ok(bookingService.cancelBooking(id));
+    public ResponseEntity<BookingDTO> cancelBooking(@PathVariable Long id,
+                                                    @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        
+        BookingDTO dto = bookingService.cancelBooking(id, userPrincipal.getId(), userPrincipal.getRole());
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping

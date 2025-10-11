@@ -7,8 +7,8 @@ import jakarta.validation.constraints.NotNull;
 
 public class BookingRequest {
     
-    @NotNull(message = "User ID is required")
-    private Long userId;
+    // @NotNull(message = "User ID is required")
+    // private Long userId;
 
     @NotNull(message = "Room ID is required")
     private Long roomId;
@@ -20,12 +20,12 @@ public class BookingRequest {
     @NotNull(message = "End time is required")
     private OffsetDateTime endTime;
 
-    public Long getUserId() {
-      return this.userId;
-    }
-    public void setUserId(Long userId) {
-      this.userId = userId;
-    }
+    // public Long getUserId() {
+    //   return this.userId;
+    // }
+    // public void setUserId(Long userId) {
+    //   this.userId = userId;
+    // }
 
     public Long getRoomId() {
       return this.roomId;
