@@ -70,7 +70,7 @@ src/main/java/com/bookingsystem/booking/
 - [x] Mapper layer for clean API responses
 - [x] Add validation
 - [x] Add global exception handling
-- [ ] Add authentication & JWT
+- [x] Add authentication & JWT
 - [ ] Add admin dashboard features
 - [ ] Deploy backend on cloud
 - [ ] Frontend
