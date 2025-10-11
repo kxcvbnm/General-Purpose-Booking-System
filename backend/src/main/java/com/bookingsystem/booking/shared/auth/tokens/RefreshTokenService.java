@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bookingsystem.booking.shared.security.PasswordHasher;
+import com.bookingsystem.booking.shared.crypto.TokenHasher;
 import com.bookingsystem.booking.user.domain.entities.User;
 
 
@@ -15,11 +15,11 @@ import com.bookingsystem.booking.user.domain.entities.User;
 public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
-    private final PasswordHasher passwordHasher;
+    private final TokenHasher tokenHasher;
 
-    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, PasswordHasher passwordHasher) {
+    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, TokenHasher tokenHasher) {
         this.refreshTokenRepository = refreshTokenRepository;
-        this.passwordHasher = passwordHasher;
+        this.tokenHasher = tokenHasher;
     }
 
     @Transactional
@@ -27,7 +27,7 @@ public class RefreshTokenService {
         
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUser(user);
-        refreshToken.setTokenHash(passwordHasher.hash(rawRefreshToken));
+        refreshToken.setTokenHash(tokenHasher.hash(rawRefreshToken));
         refreshToken.setExpiresAt(expiresAt);
         refreshTokenRepository.save(refreshToken);
     }
@@ -35,7 +35,7 @@ public class RefreshTokenService {
     @Transactional(readOnly = true)
     public Optional<RefreshToken> findValid(String raw) {
         
-        String hash = passwordHasher.hash(raw);
+        String hash = tokenHasher.hash(raw);
 
         return refreshTokenRepository.findByTokenHashAndRevokedFalse(hash)
             .filter(refreshToken -> refreshToken.getExpiresAt().isAfter(OffsetDateTime.now()));
@@ -47,6 +47,7 @@ public class RefreshTokenService {
         refreshTokenRepository.save(oldToken);
     }
 
+    @Transactional
     public void revokeAll(Long userId) {
         refreshTokenRepository.revokeAllByUserId(userId);
     }
