@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bookingsystem.booking.shared.error.ConflictException;
-import com.bookingsystem.booking.shared.error.NotFoundException;
-import com.bookingsystem.booking.shared.security.PasswordHasher;
+import com.bookingsystem.booking.shared.crypto.PasswordHasher;
+import com.bookingsystem.booking.shared.error.exception.ConflictException;
+import com.bookingsystem.booking.shared.error.exception.NotFoundException;
 import com.bookingsystem.booking.user.api.dtos.request.UserCreateRequest;
 import com.bookingsystem.booking.user.api.dtos.request.UserUpdateRequest;
 import com.bookingsystem.booking.user.api.dtos.response.UserDTO;
