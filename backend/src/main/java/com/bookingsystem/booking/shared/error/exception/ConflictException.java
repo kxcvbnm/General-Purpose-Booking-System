@@ -1,4 +1,4 @@
-package com.bookingsystem.booking.shared.error;
+package com.bookingsystem.booking.shared.error.exception;
 
 public class ConflictException extends RuntimeException {
     

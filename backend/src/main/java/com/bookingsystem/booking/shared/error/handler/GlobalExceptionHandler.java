@@ -1,10 +1,17 @@
-package com.bookingsystem.booking.shared.error;
+package com.bookingsystem.booking.shared.error.handler;
 
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.bookingsystem.booking.shared.error.exception.AccessDeniedException;
+import com.bookingsystem.booking.shared.error.exception.BusinessRuleViolationException;
+import com.bookingsystem.booking.shared.error.exception.ConflictException;
+import com.bookingsystem.booking.shared.error.exception.InvalidTokenException;
+import com.bookingsystem.booking.shared.error.exception.NotFoundException;
+import com.bookingsystem.booking.shared.error.exception.TokenExpiredException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
