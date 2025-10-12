@@ -1,5 +1,6 @@
 package com.bookingsystem.booking.room.api.controllers;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.bookingsystem.booking.room.api.dtos.request.RoomCreateRequest;
 import com.bookingsystem.booking.room.api.dtos.response.RoomDTO;
@@ -30,7 +32,14 @@ public class RoomController {
     @PostMapping
     public ResponseEntity<RoomDTO> createRoom(@Valid @RequestBody RoomCreateRequest req) {
         RoomDTO body = roomService.createRoom(req);
-        return ResponseEntity.status(201).body(body); // 201 Created
+
+        URI location = ServletUriComponentsBuilder
+            .fromCurrentRequest()     
+            .path("/{id}")
+            .buildAndExpand(body.id())  
+            .toUri();
+
+        return ResponseEntity.created(location).body(body); // 201 Created
     }
 
     @GetMapping

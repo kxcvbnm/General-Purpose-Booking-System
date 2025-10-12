@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.bookingsystem.booking.booking.api.dtos.request.BookingRequest;
 import com.bookingsystem.booking.booking.api.dtos.response.BookingDTO;
@@ -39,8 +40,14 @@ public class BookingController {
             bookingRequest.getStartTime(),
             bookingRequest.getEndTime()
         );
+
+        URI location = ServletUriComponentsBuilder
+            .fromCurrentRequest()        
+            .path("/{id}")
+            .buildAndExpand(body.id())    
+            .toUri();
         
-        return ResponseEntity.created(URI.create("/api/bookings/" + body.getId())).body(body); // 201 Created
+        return ResponseEntity.created(location).body(body); // 201 Created
     }
 
     @PutMapping("/{id}/cancel")
