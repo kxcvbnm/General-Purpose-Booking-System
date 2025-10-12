@@ -20,7 +20,8 @@ public class BackendApplication {
 		SpringApplication.run(BackendApplication.class, args);
 	}
 
-	@Bean CommandLineRunner seedUsers(UserRepository users, PasswordEncoder enc) { 
+	@Bean 
+	CommandLineRunner seedUsers(UserRepository users, PasswordEncoder enc) { 
 		return args -> { 
 			users.findByEmailIgnoreCase("alice@example.com").orElseGet(() -> { 
 				User u = new User(); 
