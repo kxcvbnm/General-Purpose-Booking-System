@@ -40,13 +40,13 @@ public class BookingController {
             bookingRequest.getStartTime(),
             bookingRequest.getEndTime()
         );
-
+  
         URI location = ServletUriComponentsBuilder
-            .fromCurrentRequest()        
+            .fromCurrentRequest()     
             .path("/{id}")
-            .buildAndExpand(body.id())    
+            .buildAndExpand(body.id())  
             .toUri();
-        
+
         return ResponseEntity.created(location).body(body); // 201 Created
     }
 
