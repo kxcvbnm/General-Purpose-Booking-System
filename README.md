@@ -46,6 +46,12 @@ src/main/java/com/bookingsystem/booking/
 ```
 
 # 📡 API Endpoints
+
+## Authentication
+  - POST /api/auth/login → Login with existed user
+  - POST /api/auth/refresh → Get refresh token after accesstoken expired
+  - POST /api/auth/logout → Logout
+
 ## Users
   - POST /api/users → Create a user
   - GET /api/users → Get all users
@@ -70,9 +76,8 @@ src/main/java/com/bookingsystem/booking/
 - [x] Mapper layer for clean API responses
 - [x] Add validation
 - [x] Add global exception handling
-- [ ] Add authentication & JWT
+- [x] Add authentication & JWT
 - [ ] Add admin dashboard features
-- [ ] Deploy backend on cloud
 - [ ] Frontend
     - User-friendly UI for booking rooms
     - Login/Register pages
