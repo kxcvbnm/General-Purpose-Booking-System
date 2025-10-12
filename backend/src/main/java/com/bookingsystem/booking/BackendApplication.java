@@ -27,28 +27,31 @@ public class BackendApplication {
 				u.setEmail("alice@example.com"); 
 				u.setUsername("alice"); u.setRole(Role.USER); 
 				u.setPassword(enc.encode("P@ssw0rd!123")); 
-			return users.save(u); }); }; }
+			return users.save(u); 
+			}); 
+		}; 
+	}
 
 	@Bean
   	CommandLineRunner seedRooms(RoomRepository rooms) {
 		return args -> {
-		if (!rooms.existsByNameIgnoreCase("Meeting Room")) {
-			Room r = new Room();
-			r.setName("Meeting Room A");
-			r.setType(RoomType.MEETING);
-			r.setCapacity(10);
-			r.setDescription("Cozy meeting room with whiteboard");
-			rooms.save(r);
-		}
+			if (!rooms.existsByNameIgnoreCase("Meeting Room")) {
+				Room r = new Room();
+				r.setName("Meeting Room A");
+				r.setType(RoomType.MEETING);
+				r.setCapacity(10);
+				r.setDescription("Cozy meeting room with whiteboard");
+				rooms.save(r);
+			}
 
-		if (!rooms.existsByNameIgnoreCase("Music Room")) {
-			Room r = new Room();
-			r.setName("Conference Hall");
-			r.setType(RoomType.MUSIC);
-			r.setCapacity(5);
-			r.setDescription("Guitar + Amp");
-			rooms.save(r);
-		}
+			if (!rooms.existsByNameIgnoreCase("Music Room")) {
+				Room r = new Room();
+				r.setName("Conference Hall");
+				r.setType(RoomType.MUSIC);
+				r.setCapacity(5);
+				r.setDescription("Guitar + Amp");
+				rooms.save(r);
+			}
     	};
 	}
 }
