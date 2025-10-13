@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -46,6 +47,22 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
+                
+                // Rooms(admin manages)
+                .requestMatchers(HttpMethod.POST, "/api/rooms/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "api/rooms/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/rooms/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/rooms/**").authenticated()
+                
+                // Users(user manages)
+                .requestMatchers("/api/users/me/**").authenticated()
+
+                // Users(admin manages)
+                .requestMatchers("/api/users/**").hasRole("ADMIN")
+
+                // Bookings
+                .requestMatchers("/api/bookings/**").authenticated()
+
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authProvider)
