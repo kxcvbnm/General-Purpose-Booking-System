@@ -77,7 +77,6 @@ public class UserService {
         return UserMapper.toDto(saved);
     }
 
-    // Soft Delete
     @Transactional
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {

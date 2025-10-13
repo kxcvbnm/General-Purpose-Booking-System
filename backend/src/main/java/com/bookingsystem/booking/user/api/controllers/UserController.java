@@ -38,6 +38,7 @@ public class UserController {
     // }
 
     @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> getCurrentUser(@AuthenticationPrincipal UserPrincipal user) {
         return ResponseEntity.ok(userService.getUserById(user.getId()));
     }
@@ -55,6 +56,7 @@ public class UserController {
     }
 
     @PatchMapping("/me")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> updateUser(@AuthenticationPrincipal UserPrincipal user, 
                                               @Valid @RequestBody UserUpdateRequest req) {
         return ResponseEntity.ok(userService.updateUser(user.getId(), req));
