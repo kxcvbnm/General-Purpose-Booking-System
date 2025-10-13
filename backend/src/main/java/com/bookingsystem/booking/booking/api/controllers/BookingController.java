@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,14 +32,15 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
+    // User create booking
     @PostMapping
     public ResponseEntity<BookingDTO> createBooking(@Valid @RequestBody BookingRequest bookingRequest,
                                                     @AuthenticationPrincipal UserPrincipal userPrincipal) {
         BookingDTO body = bookingService.createBooking(
             userPrincipal.getId(),
-            bookingRequest.getRoomId(),
-            bookingRequest.getStartTime(),
-            bookingRequest.getEndTime()
+            bookingRequest.roomId(),
+            bookingRequest.startTime(),
+            bookingRequest.endTime()
         );
   
         URI location = ServletUriComponentsBuilder
@@ -50,20 +52,26 @@ public class BookingController {
         return ResponseEntity.created(location).body(body); // 201 Created
     }
 
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<BookingDTO>> myBookings(@AuthenticationPrincipal UserPrincipal user) {
+        return  ResponseEntity.ok(bookingService.getBookingsForUser(user.getId()));
+    }
+
     @PutMapping("/{id}/cancel")
-    public ResponseEntity<BookingDTO> cancelBooking(@PathVariable Long id,
-                                                    @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        
-        BookingDTO dto = bookingService.cancelBooking(id, userPrincipal.getId(), userPrincipal.getRole());
-        return ResponseEntity.ok(dto);
+    @PreAuthorize("@policy.canModifyBooking(#id, authentication)")
+    public ResponseEntity<BookingDTO> cancelBooking(@PathVariable Long id) {
+        return ResponseEntity.ok(bookingService.cancelBooking(id));
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<BookingDTO>> getAllBookings() {
         return ResponseEntity.ok(bookingService.getAllBookings());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@policy.canViewBooking(#id, authentication)")
     public ResponseEntity<BookingDTO> getBookingById(@PathVariable Long id) {
         return ResponseEntity.ok(bookingService.getBookingById(id));
     } 

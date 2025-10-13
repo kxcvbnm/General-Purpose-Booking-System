@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +19,6 @@ import com.bookingsystem.booking.shared.error.exception.BusinessRuleViolationExc
 import com.bookingsystem.booking.shared.error.exception.NotFoundException;
 import com.bookingsystem.booking.user.data.UserRepository;
 import com.bookingsystem.booking.user.domain.entities.User;
-import com.bookingsystem.booking.user.domain.enums.Role;
 
 @Service
 public class BookingService {
@@ -87,31 +86,31 @@ public class BookingService {
         return BookingMapper.toDto(saved);          
     }
 
+    @Transactional(readOnly = true)
+    public List<BookingDTO> getBookingsForUser(Long userId) {
+        return BookingMapper.toDtoList(bookingRepository.findByUserIdOrderByStartTimeDesc(userId));
+    }
+
     @Transactional
-    public BookingDTO cancelBooking(Long bookingId, Long userId, Role role) {
+    public BookingDTO cancelBooking(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Booking not found"));
-        
-        boolean isBooker = booking.getUser().getId().equals(userId);
-        boolean isAdmin = role == Role.ADMIN;
-        if(!isBooker && !isAdmin) {
-            throw new AccessDeniedException("you can only cancel your own bookings");
-        }
 
         if(booking.getStatus() == BookingStatus.CANCELLED) {
             return BookingMapper.toDto(booking);
         }
 
         booking.setStatus(BookingStatus.CANCELLED);
-        
         return BookingMapper.toDto(bookingRepository.save(booking));
     }
 
     @Transactional(readOnly = true)
+    @PreAuthorize("hasRole('ADMIN')")
     public List<BookingDTO> getAllBookings() {
         return BookingMapper.toDtoList(bookingRepository.findAll());
     }
 
+    @Transactional(readOnly = true)
     public BookingDTO getBookingById(Long id) {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Booking not found"));
