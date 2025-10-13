@@ -58,18 +58,18 @@ public class UserService {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("User not found " + id));
         
-        if(req.username() != null) {
-            user.setUsername(req.username());
+        if(req.username() != null && !req.username().isBlank()) {
+            user.setUsername(req.username().trim());
         }
 
-        if(req.email() != null) {
+        if(req.email() != null && !req.email().isBlank()) {
             if(userRepository.existsByEmailIgnoreCaseAndIdNot(req.email(), id)) {
                 throw new ConflictException("Email already exists"); 
             }
-            user.setEmail(req.email());
+            user.setEmail(req.email().trim().toLowerCase());
         }
 
-        if(req.password() != null) {
+        if(req.password() != null && !req.password().isBlank()) {
             user.setPassword(passwordHasher.hash(req.password()));
         }
 
