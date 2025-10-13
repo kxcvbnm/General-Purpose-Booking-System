@@ -26,15 +26,15 @@ public class RoomService {
     @Transactional
     public RoomDTO createRoom(RoomCreateRequest req) {
         
-        if (roomRepository.existsByNameIgnoreCase(req.getName())) {
+        if (roomRepository.existsByNameIgnoreCase(req.name())) {
             throw new ConflictException("Room name already exists");
         }
        
         Room room = new Room();
-        room.setName(req.getName());
-        room.setDescription(req.getDescription());
-        room.setCapacity(req.getCapacity());
-        room.setType(req.getType());
+        room.setName(req.name());
+        room.setDescription(req.description());
+        room.setCapacity(req.capacity());
+        room.setType(req.type());
         
         Room saved = roomRepository.save(room);
         return RoomMapper.toDto(saved);
