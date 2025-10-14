@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record UserUpdateRequest(
+   
     @Size(max = 50) String username,
-    @Email @Size(max = 100) String email,
-    @Size(min = 8, max = 64) String password
+    @Email @Size(max = 100) String email
 ) {}
