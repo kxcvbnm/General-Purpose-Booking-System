@@ -56,7 +56,7 @@ public class Booking {
         this.startTime = startTime;
         this.endTime = endTime;
         this.createdAt = OffsetDateTime.now();  
-        this.status = BookingStatus.PENDING;
+        this.status = BookingStatus.AVAILABLE;
     }
 
     public Long getId() {
