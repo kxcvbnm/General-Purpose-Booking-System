@@ -12,6 +12,8 @@ import com.bookingsystem.booking.shared.error.exception.ConflictException;
 import com.bookingsystem.booking.shared.error.exception.InvalidTokenException;
 import com.bookingsystem.booking.shared.error.exception.NotFoundException;
 import com.bookingsystem.booking.shared.error.exception.TokenExpiredException;
+import com.bookingsystem.booking.shared.error.exception.UnauthorizedException;
+
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -64,4 +66,11 @@ public class GlobalExceptionHandler {
         ));
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDenied(UnauthorizedException ex) {
+        return ResponseEntity.status(403).body(Map.of(
+            "error", "invalid_token",
+            "message", ex.getMessage()
+        ));
+    }
 }
