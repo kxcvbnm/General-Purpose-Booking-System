@@ -77,7 +77,7 @@ public class UserService {
         User saved = userRepository.save(user);
         return UserMapper.toDto(saved);
     }
-
+ 
     @Transactional
     public void changePassword(Long userId, String password, String newPassword) {
         
