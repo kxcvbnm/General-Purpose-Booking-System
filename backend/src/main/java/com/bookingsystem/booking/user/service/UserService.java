@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bookingsystem.booking.shared.auth.tokens.RefreshTokenService;
 import com.bookingsystem.booking.shared.crypto.PasswordHasher;
 import com.bookingsystem.booking.shared.error.exception.ConflictException;
 import com.bookingsystem.booking.shared.error.exception.NotFoundException;
@@ -19,10 +20,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordHasher passwordHasher;
+    private final RefreshTokenService refreshTokenService;
 
-    public UserService(UserRepository userRepository, PasswordHasher passwordHasher) {
+    public UserService(UserRepository userRepository, PasswordHasher passwordHasher, RefreshTokenService refreshTokenService) {
         this.userRepository = userRepository;
         this.passwordHasher = passwordHasher;
+        this.refreshTokenService = refreshTokenService;
     }
 
     // @Transactional
@@ -67,10 +70,12 @@ public class UserService {
                 throw new ConflictException("Email already exists"); 
             }
             user.setEmail(req.email().trim().toLowerCase());
+            refreshTokenService.revokeAll(user.getId());
         }
 
         if(req.password() != null && !req.password().isBlank()) {
             user.setPassword(passwordHasher.hash(req.password()));
+            refreshTokenService.revokeAll(user.getId());
         }
 
         User saved = userRepository.save(user);
