@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookingsystem.booking.shared.security.UserPrincipal;
+import com.bookingsystem.booking.user.api.dtos.request.ChangePasswordRequest;
 import com.bookingsystem.booking.user.api.dtos.request.UserUpdateRequest;
 import com.bookingsystem.booking.user.api.dtos.response.UserDTO;
 import com.bookingsystem.booking.user.service.UserService;
@@ -60,6 +61,14 @@ public class UserController {
     public ResponseEntity<UserDTO> updateUser(@AuthenticationPrincipal UserPrincipal user, 
                                               @Valid @RequestBody UserUpdateRequest req) {
         return ResponseEntity.ok(userService.updateUser(user.getId(), req));
+    }
+
+    @PatchMapping("/me/password")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> changePassword(@AuthenticationPrincipal UserPrincipal user,
+                                               @Valid @RequestBody ChangePasswordRequest req) {
+        userService.changePassword(user.getId(), req.currentPassword(), req.newPassword());                                        
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

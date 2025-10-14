@@ -9,6 +9,7 @@ import com.bookingsystem.booking.shared.auth.tokens.RefreshTokenService;
 import com.bookingsystem.booking.shared.crypto.PasswordHasher;
 import com.bookingsystem.booking.shared.error.exception.ConflictException;
 import com.bookingsystem.booking.shared.error.exception.NotFoundException;
+import com.bookingsystem.booking.shared.error.exception.UnauthorizedException;
 import com.bookingsystem.booking.user.api.dtos.request.UserUpdateRequest;
 import com.bookingsystem.booking.user.api.dtos.response.UserDTO;
 import com.bookingsystem.booking.user.api.mappers.UserMapper;
@@ -73,13 +74,26 @@ public class UserService {
             refreshTokenService.revokeAll(user.getId());
         }
 
-        if(req.password() != null && !req.password().isBlank()) {
-            user.setPassword(passwordHasher.hash(req.password()));
-            refreshTokenService.revokeAll(user.getId());
-        }
-
         User saved = userRepository.save(user);
         return UserMapper.toDto(saved);
+    }
+
+    @Transactional
+    public void changePassword(Long userId, String password, String newPassword) {
+        
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found "));
+        
+        if(!passwordHasher.matches(password, user.getPassword())) {
+            throw new UnauthorizedException("Password does not match");
+        }
+
+        if(passwordHasher.matches(newPassword, user.getPassword())) {
+            throw new ConflictException("New password must be different from current");
+        }
+
+        user.setPassword(passwordHasher.hash(newPassword));
+        userRepository.save(user);
+        refreshTokenService.revokeAll(userId);
     }
 
     @Transactional
