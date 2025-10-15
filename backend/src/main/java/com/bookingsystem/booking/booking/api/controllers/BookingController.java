@@ -34,6 +34,7 @@ public class BookingController {
 
     // User create booking
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<BookingDTO> createBooking(@Valid @RequestBody BookingRequest bookingRequest,
                                                     @AuthenticationPrincipal UserPrincipal userPrincipal) {
         BookingDTO body = bookingService.createBooking(
