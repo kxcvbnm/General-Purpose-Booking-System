@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.bookingsystem.booking.shared.auth.dto.request.LoginRequest;
 import com.bookingsystem.booking.shared.auth.dto.request.RefreshRequest;
@@ -15,6 +16,7 @@ import com.bookingsystem.booking.shared.auth.dto.request.RegisterRequest;
 import com.bookingsystem.booking.shared.auth.dto.response.TokenResponse;
 import com.bookingsystem.booking.shared.auth.service.AuthService;
 import com.bookingsystem.booking.shared.security.UserPrincipal;
+import com.bookingsystem.booking.user.api.dtos.response.UserDTO;
 
 import jakarta.validation.Valid;
 
@@ -29,10 +31,14 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<TokenResponse> register(@Valid @RequestBody RegisterRequest req) {
-        TokenResponse tokens = authService.register(req); 
-        URI location = URI.create("/api/users/me");
-        return ResponseEntity.created(location).body(tokens);
+    public ResponseEntity<UserDTO> register(@Valid @RequestBody RegisterRequest req) {
+        UserDTO created = authService.register(req); 
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(created.id())
+                .toUri();
+        return ResponseEntity.created(location).body(created);
     }
 
     @PostMapping("/login")

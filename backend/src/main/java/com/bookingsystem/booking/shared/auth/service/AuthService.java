@@ -20,6 +20,8 @@ import com.bookingsystem.booking.shared.error.exception.ConflictException;
 import com.bookingsystem.booking.shared.error.exception.InvalidTokenException;
 import com.bookingsystem.booking.shared.security.JwtService;
 import com.bookingsystem.booking.shared.security.UserPrincipal;
+import com.bookingsystem.booking.user.api.dtos.response.UserDTO;
+import com.bookingsystem.booking.user.api.mappers.UserMapper;
 import com.bookingsystem.booking.user.data.UserRepository;
 import com.bookingsystem.booking.user.domain.entities.User;
 import com.bookingsystem.booking.user.domain.enums.Role;
@@ -50,7 +52,7 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenResponse register(RegisterRequest req) {
+    public UserDTO register(RegisterRequest req) {
 
         if (userRepository.existsByEmailIgnoreCase(req.email())) {
         throw new ConflictException("Email already exists");
@@ -63,17 +65,7 @@ public class AuthService {
         user.setRole(Role.USER);
         
         User saved = userRepository.save(user);
-
-        UserPrincipal principal = new UserPrincipal(saved);
-        String accessToken  = jwtService.generateAccessToken(principal);
-        String refreshToken = jwtService.generateRefreshToken(principal);
-
-        Claims refreshClaims = jwtService.parse(refreshToken).getBody();
-        OffsetDateTime refreshExpiresAt = OffsetDateTime.ofInstant(
-            refreshClaims.getExpiration().toInstant(), UTC);
-        
-        refreshTokenService.store(user, refreshToken, refreshExpiresAt);
-        return new TokenResponse(accessToken, refreshToken);
+        return UserMapper.toDto(saved);
     }
 
 
