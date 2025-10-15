@@ -7,17 +7,22 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bookingsystem.booking.shared.auth.dto.request.LoginRequest;
 import com.bookingsystem.booking.shared.auth.dto.request.RefreshRequest;
+import com.bookingsystem.booking.shared.auth.dto.request.RegisterRequest;
 import com.bookingsystem.booking.shared.auth.dto.response.TokenResponse;
 import com.bookingsystem.booking.shared.auth.tokens.RefreshToken;
 import com.bookingsystem.booking.shared.auth.tokens.RefreshTokenService;
+import com.bookingsystem.booking.shared.crypto.PasswordHasher;
+import com.bookingsystem.booking.shared.error.exception.ConflictException;
 import com.bookingsystem.booking.shared.error.exception.InvalidTokenException;
 import com.bookingsystem.booking.shared.security.JwtService;
 import com.bookingsystem.booking.shared.security.UserPrincipal;
 import com.bookingsystem.booking.user.data.UserRepository;
 import com.bookingsystem.booking.user.domain.entities.User;
+import com.bookingsystem.booking.user.domain.enums.Role;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -29,15 +34,50 @@ public class AuthService {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final RefreshTokenService refreshTokenService;
+    private final PasswordHasher passwordHasher;
 
-    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, UserRepository userRepository, RefreshTokenService refreshTokenService) {
+    public AuthService(AuthenticationManager authenticationManager, 
+                       JwtService jwtService, 
+                       UserRepository userRepository, 
+                       RefreshTokenService refreshTokenService,
+                       PasswordHasher passwordHasher) {
         
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.refreshTokenService = refreshTokenService;
+        this.passwordHasher = passwordHasher;
     }
 
+    @Transactional
+    public TokenResponse register(RegisterRequest req) {
+
+        if (userRepository.existsByEmailIgnoreCase(req.email())) {
+        throw new ConflictException("Email already exists");
+        }
+
+        User user = new User();
+        user.setEmail(req.email().trim().toLowerCase());
+        user.setUsername(req.username().trim());
+        user.setPassword(passwordHasher.hash(req.password()));
+        user.setRole(Role.USER);
+        
+        User saved = userRepository.save(user);
+
+        UserPrincipal principal = new UserPrincipal(saved);
+        String accessToken  = jwtService.generateAccessToken(principal);
+        String refreshToken = jwtService.generateRefreshToken(principal);
+
+        Claims refreshClaims = jwtService.parse(refreshToken).getBody();
+        OffsetDateTime refreshExpiresAt = OffsetDateTime.ofInstant(
+            refreshClaims.getExpiration().toInstant(), UTC);
+        
+        refreshTokenService.store(user, refreshToken, refreshExpiresAt);
+        return new TokenResponse(accessToken, refreshToken);
+    }
+
+
+    @Transactional
     public TokenResponse login(LoginRequest req) {
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(req.email(), req.password());
         Authentication authentication = authenticationManager.authenticate(authRequest);
@@ -62,6 +102,7 @@ public class AuthService {
         return new TokenResponse(accessToken, refreshToken);
     }
 
+    @Transactional
     public TokenResponse refresh(RefreshRequest req) {
         Jws<Claims> jws = jwtService.parse(req.refreshToken());
 

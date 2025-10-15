@@ -1,5 +1,7 @@
 package com.bookingsystem.booking.shared.auth.api;
 
+import java.net.URI;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bookingsystem.booking.shared.auth.dto.request.LoginRequest;
 import com.bookingsystem.booking.shared.auth.dto.request.RefreshRequest;
+import com.bookingsystem.booking.shared.auth.dto.request.RegisterRequest;
 import com.bookingsystem.booking.shared.auth.dto.response.TokenResponse;
 import com.bookingsystem.booking.shared.auth.service.AuthService;
 import com.bookingsystem.booking.shared.security.UserPrincipal;
@@ -23,6 +26,13 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<TokenResponse> register(@Valid @RequestBody RegisterRequest req) {
+        TokenResponse tokens = authService.register(req); 
+        URI location = URI.create("/api/users/me");
+        return ResponseEntity.created(location).body(tokens);
     }
 
     @PostMapping("/login")
