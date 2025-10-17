@@ -1,7 +1,10 @@
 package com.bookingsystem.booking.booking.service;
 
 import java.time.Duration;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +18,7 @@ import com.bookingsystem.booking.booking.domain.entities.Booking;
 import com.bookingsystem.booking.booking.domain.enums.BookingStatus;
 import com.bookingsystem.booking.room.data.RoomRepository;
 import com.bookingsystem.booking.room.domain.entities.Room;
+import com.bookingsystem.booking.shared.config.HoursProperties;
 import com.bookingsystem.booking.shared.error.exception.BusinessRuleViolationException;
 import com.bookingsystem.booking.shared.error.exception.NotFoundException;
 import com.bookingsystem.booking.user.data.UserRepository;
@@ -26,13 +30,16 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
+    private final HoursProperties hours;
 
     public BookingService(BookingRepository bookingRepository,
                          UserRepository userRepository,
-                         RoomRepository roomRepository) {
+                         RoomRepository roomRepository,
+                         HoursProperties hours) {
         this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
         this.roomRepository = roomRepository;
+        this.hours = hours;
     }
 
     @Transactional
@@ -50,8 +57,14 @@ public class BookingService {
             throw new BusinessRuleViolationException("Start time must be in the future.");
         }
 
+        validateBookingTime(startTime, endTime);
+
         long minutes = Duration.between(startTime, endTime).toMinutes();
         
+        if(minutes % 60 != 0) {
+            throw new BusinessRuleViolationException("Booking duration must be 1 or 2 hours.");
+        }
+
         if(minutes < 60) {
             throw new BusinessRuleViolationException("Minimum booking duration is 60 minutes.");
         }
@@ -116,4 +129,27 @@ public class BookingService {
                 .orElseThrow(() -> new NotFoundException("Booking not found"));
         return BookingMapper.toDto(booking);
     }  
+
+    private void validateBookingTime(OffsetDateTime startTime, OffsetDateTime endTime) {
+    
+        ZoneId zone = ZoneId.of(hours.timezone());
+        ZonedDateTime start = startTime.atZoneSameInstant(zone);
+        ZonedDateTime end = endTime.atZoneSameInstant(zone);
+
+        if(!start.toLocalDate().equals(end.toLocalDate())) {
+            throw new BusinessRuleViolationException("Booking must start and end on the same day between "
+                + hours.open() + " and " + hours.close() + " (" + hours.timezone() + ").");
+        }
+
+        LocalTime s = start.toLocalTime();
+        LocalTime e = end.toLocalTime();
+
+        boolean startOk = !s.isBefore(hours.open());   // s >= open
+        boolean endOk   = !e.isAfter(hours.close());   // e <= close
+
+        if (!startOk || !endOk) {
+            throw new BusinessRuleViolationException("Bookings are allowed only between "
+                + hours.open() + " and " + hours.close() + " (" + hours.timezone() + ").");
+        }
+    }
 }
