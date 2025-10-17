@@ -29,7 +29,16 @@ public class BackendApplication {
 				u.setUsername("alice"); u.setRole(Role.USER); 
 				u.setPassword(enc.encode("P@ssw0rd!123")); 
 			return users.save(u); 
-			}); 
+			});
+			
+			users.findByEmailIgnoreCase("admin@example.com").orElseGet(() -> {
+				User u = new User();
+				u.setEmail("admin@example.com");
+				u.setUsername("Prompt");
+				u.setRole(Role.ADMIN);
+				u.setPassword(enc.encode("P@ssw0rd!456"));
+            return users.save(u);
+        	});
 		}; 
 	}
 
