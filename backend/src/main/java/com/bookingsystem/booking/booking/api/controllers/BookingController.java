@@ -23,7 +23,7 @@ import com.bookingsystem.booking.shared.security.UserPrincipal;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/bookings")
+@RequestMapping("/api/v1/bookings")
 public class BookingController {
     
     private final BookingService bookingService;

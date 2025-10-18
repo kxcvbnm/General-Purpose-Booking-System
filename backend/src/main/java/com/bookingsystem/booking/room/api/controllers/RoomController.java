@@ -21,7 +21,7 @@ import com.bookingsystem.booking.room.service.RoomService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/rooms")
+@RequestMapping("/api/v1/rooms")
 public class RoomController {
 
     private final RoomService roomService;
