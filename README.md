@@ -18,12 +18,12 @@
   - Create a booking (POST /api/bookings)
   - Cancel a booking (PUT /api/bookings/{id}/cancel)
   - Fetch all bookings or by ID
-  - Bookings keep status (PENDING, CANCELLED) instead of being deleted
+  - Bookings keep status (CANCELLED) instead of being deleted
 
 ## DTO + Mapper Architecture
   - Entities never exposed directly
-  - Request DTOs (BookingRequest)
-  - Response DTOs (BookingDTO, UserDTO, RoomDTO)
+  - Request DTOs 
+  - Response DTOs 
   - Mappers handle conversion between entities and DTOs
 
 # 🛠 Tech Stack
@@ -48,26 +48,31 @@ src/main/java/com/bookingsystem/booking/
 # 📡 API Endpoints
 
 ## Authentication
+  - POST /api/auth/register → Register new user
   - POST /api/auth/login → Login with existed user
   - POST /api/auth/refresh → Get refresh token after accesstoken expired
   - POST /api/auth/logout → Logout
 
 ## Users
-  - POST /api/users → Create a user
-  - GET /api/users → Get all users
-  - GET /api/users/{id} → Get user by ID
-  - DELETE /api/users/{id} → Delete user
+  - GET /api/users → Get all users (ADMIN)
+  - GET /api/users/{id} → Get user by ID (ADMIN)
+  - DELETE /api/users/{id} → Delete user (ADMIN)
+  - GET /api/users/me → User get their own profile (USER)
+  - PATCH /api/users/me → User edit and update their profile (USER)
+  - PATCH /api/users/me/password → User change their password (USER)
 
 ## Rooms
-  - POST /api/rooms → Create a room
-  - GET /api/rooms → Get all rooms
-  - GET /api/rooms/{id} → Get room by ID
+  - POST /api/rooms → Create a room (ADMIN)
+  - GET /api/rooms → Get all rooms (ADMIN)
+  - GET /api/rooms/{id} → Get room by ID (ADMIN)
+  - DELETE /api/rooms/{id} → Delete room (ADMIN)
 
 ## Bookings
-  - POST /api/bookings → Create a booking
-  - PUT /api/bookings/{id}/cancel → Cancel a booking
-  - GET /api/bookings → Get all bookings
-  - GET /api/bookings/{id} → Get booking by ID
+  - POST /api/bookings → Create a booking (USER)
+  - PATCH /api/bookings/{id}/cancel → Cancel a booking (USER)
+  - GET /api/bookings → Get all bookings (ADMIN)
+  - GET /api/bookings/{id} → Get booking by ID (USER)
+  - GET /api/bookings/me → User get their own bookings (USER)
 
 # 📅 Roadmap
 - [x] User, Room, Booking entities
