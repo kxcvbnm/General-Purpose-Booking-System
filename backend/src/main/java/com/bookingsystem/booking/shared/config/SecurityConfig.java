@@ -46,22 +46,22 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/v1/auth/**").permitAll()
                 
                 // Rooms(admin manages)
-                .requestMatchers(HttpMethod.POST, "/api/rooms/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/v1/rooms/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "api/rooms/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/rooms/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/rooms/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/rooms/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/v1/rooms/**").authenticated()
                 
                 // Users(user manages)
-                .requestMatchers("/api/users/me/**").authenticated()
+                .requestMatchers("/api/v1/users/me/**").authenticated()
 
                 // Users(admin manages)
-                .requestMatchers("/api/users/**").hasRole("ADMIN")
+                .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
 
                 // Bookings
-                .requestMatchers("/api/bookings/**").authenticated()
+                .requestMatchers("/api/v1/bookings/**").authenticated()
 
                 .anyRequest().authenticated()
             )
