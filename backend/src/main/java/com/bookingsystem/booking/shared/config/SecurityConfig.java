@@ -46,11 +46,16 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
+
+                // CORS preflight
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                // Auth
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 
                 // Rooms(admin manages)
                 .requestMatchers(HttpMethod.POST, "/api/v1/rooms/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "api/rooms/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "api/v1/rooms/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/rooms/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/v1/rooms/**").authenticated()
                 
@@ -92,9 +97,11 @@ public class SecurityConfig {
         CorsConfiguration cfg = new CorsConfiguration();
 
         // Adjust for frontend origins
-        cfg.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173"));
+        cfg.setAllowedOrigins(List.of("http://localhost:3000"));
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        cfg.setAllowedHeaders(List.of("*"));
+        cfg.setAllowedHeaders(List.of("Authorization","Content-Type","Accept","X-Requested-With","X-CSRF-Token"));
+        cfg.setExposedHeaders(List.of("Location","Content-Disposition","X-Total-Count"));
+        cfg.setMaxAge(3600L);
         cfg.setAllowCredentials(true);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
