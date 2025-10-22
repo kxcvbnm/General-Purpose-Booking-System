@@ -97,7 +97,7 @@ public class SecurityConfig {
         CorsConfiguration cfg = new CorsConfiguration();
 
         // Adjust for frontend origins
-        cfg.setAllowedOrigins(List.of("http://localhost:3000"));
+        cfg.setAllowedOrigins(List.of("http://localhost:5173"));
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         cfg.setAllowedHeaders(List.of("Authorization","Content-Type","Accept","X-Requested-With","X-CSRF-Token"));
         cfg.setExposedHeaders(List.of("Location","Content-Disposition","X-Total-Count"));
