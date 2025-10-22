@@ -19,20 +19,20 @@ export async function POST(request: NextRequest) {
     const response = new NextResponse(null, { status: 204 });
 
     if(accessToken) {
-        response.cookies.set('accessToken', accessToken, { 
+        response.cookies.set("accessToken", accessToken, { 
             httpOnly: true, 
             secure: true,
-            sameSite: 'lax', 
+            sameSite: 'strict', 
             path: '/',
             maxAge: 60 * 10,     // 10 minutes
         });
     }
     if(refreshToken) {
-        response.cookies.set('refreshToken', refreshToken, { 
+        response.cookies.set("refreshToken", refreshToken, { 
             httpOnly: true, 
             secure: true,
-            sameSite: 'lax', 
-            path: '/',
+            sameSite: "strict", 
+            path: "/api/auth",
             maxAge: 60 * 60 * 24 * 7,     // 7 days
         });
     }

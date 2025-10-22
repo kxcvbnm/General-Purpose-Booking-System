@@ -15,24 +15,24 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(message, { status: res.status });
     }
 
-    const { access: newAccess, refresh: newRefresh } = await res.json();
+    const { accessToken, refreshToken } = await res.json();
 
     const response = NextResponse.json(null, { status: 204 });
-    if(newAccess) {
-        response.cookies.set("access", newAccess, {
+    if(accessToken) {
+        response.cookies.set("accessToken", accessToken, {
             httpOnly: true,
             secure: true,
-            sameSite: "lax",
+            sameSite: "strict",
             path: "/",
             maxAge: 60 * 10,     // 10 minutes
         });
     }
-    if(newRefresh) {
-        response.cookies.set("refresh", newRefresh, {
+    if(refreshToken) {
+        response.cookies.set("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
-            sameSite: "lax",
-            path: "/api",
+            sameSite: "strict",
+            path: "/api/auth",
             maxAge: 60 * 60 * 24 * 7,     // 7 days
         });
     }
