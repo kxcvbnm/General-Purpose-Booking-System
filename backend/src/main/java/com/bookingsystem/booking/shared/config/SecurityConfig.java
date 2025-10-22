@@ -55,7 +55,7 @@ public class SecurityConfig {
                 
                 // Rooms(admin manages)
                 .requestMatchers(HttpMethod.POST, "/api/v1/rooms/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "api/v1/rooms/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/rooms/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/rooms/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/v1/rooms/**").authenticated()
                 
