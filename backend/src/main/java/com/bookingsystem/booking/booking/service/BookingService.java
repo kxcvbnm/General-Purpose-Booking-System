@@ -59,18 +59,18 @@ public class BookingService {
 
         validateBookingTime(startTime, endTime);
 
-        long minutes = Duration.between(startTime, endTime).toMinutes();
-        
-        if(minutes % 60 != 0) {
+        long seconds = Duration.between(startTime, endTime).toSeconds();
+
+        if(seconds < 3600) {
+            throw new BusinessRuleViolationException("Minimum booking duration is 1 hour.");
+        }
+
+        if(seconds > 2*3600) {
+            throw new BusinessRuleViolationException("Maximum booking duration is 2 hours.");
+        }
+
+        if(seconds % 3600 != 0) {
             throw new BusinessRuleViolationException("Booking duration must be 1 or 2 hours.");
-        }
-
-        if(minutes < 60) {
-            throw new BusinessRuleViolationException("Minimum booking duration is 60 minutes.");
-        }
-
-        if(minutes > 120) {
-            throw new BusinessRuleViolationException("Maximum booking duration is 120 minutes.");
         }
 
         User user = userRepository.findById(userId)
