@@ -66,24 +66,24 @@ src/main/java/com/bookingsystem/booking/
 - GET /api/v1/users → Get all users (ADMIN)
 - GET /api/v1/users/{id} → Get user by ID (ADMIN)
 - DELETE /api/v1/users/{id} → Delete user (ADMIN)
-- GET /api/v1/users/me → User get their own profile (USER)
-- PATCH /api/v1/users/me → User edit and update their profile (USER)
-- PATCH /api/v1/users/me/password → User change their password (USER)
+- GET /api/v1/users/me → User get their own profile (Authenticated)
+- PATCH /api/v1/users/me → User edit and update their profile (Authenticated)
+- PATCH /api/v1/users/me/password → User change their password (Authenticated)
 
 ## Rooms
 
 - POST /api/v1/rooms → Create a room (ADMIN)
-- GET /api/v1/rooms → Get all rooms (ADMIN)
+- GET /api/v1/rooms → Get all rooms (Authenticated)
 - GET /api/v1/rooms/{id} → Get room by ID (ADMIN)
 - DELETE /api/v1/rooms/{id} → Delete room (ADMIN)
 
 ## Bookings
 
-- POST /api/v1/bookings → Create a booking (USER)
-- PATCH /api/v1/bookings/{id}/cancel → Cancel a booking (USER)
+- POST /api/v1/bookings → Create a booking (Authenticated)
+- PATCH /api/v1/bookings/{id}/cancel → Cancel a booking (Authenticated)
 - GET /api/v1/bookings → Get all bookings (ADMIN)
-- GET /api/v1/bookings/{id} → Get booking by ID (USER)
-- GET /api/v1/bookings/me → User get their own bookings (USER)
+- GET /api/v1/bookings/{id} → Get booking by ID (Authenticated)
+- GET /api/v1/bookings/me → User get their own bookings (Authenticated)
 
 # 📅 Roadmap
 
@@ -94,10 +94,5 @@ src/main/java/com/bookingsystem/booking/
 - [x] Add validation
 - [x] Add global exception handling
 - [x] Add authentication & JWT
-- [ ] Add admin dashboard features
-- [ ] Frontend
-  - User-friendly UI for booking rooms
-  - Login/Register pages
-  - Booking calendar view
-  - Admin panel for room/user management
-- [ ] Connect frontend with backend then deploy
+- [ ] Swagger/OpenAPI
+- [ ] Deploy
