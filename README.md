@@ -2,9 +2,15 @@
 
 # 🚧 This project is under active development.
 
-> A Spring Boot + PostgreSQL based booking system that can be adapted to different use cases such as music rooms, table tennis courts, or study rooms. Showcase clean backend architecture, DTO usage, and best practices for real-world systems.
+> A Spring Boot + PostgreSQL based booking system that can be adapted to different use cases such as music rooms, table tennis courts, or study rooms. Showcase clean backend architecture, DTO usage, include JWT and best practices for real-world systems.
 
-# 🚀 Features (current progress)
+# 🚀 Features
+
+## Auth Management
+
+- Register
+- Login
+- Access and Refresh tokens
 
 ## User Management
 
@@ -19,9 +25,10 @@
 
 ## Booking Management
 
-- Create a booking (POST /api/v1/bookings)
-- Cancel a booking (PUT /api/v1/bookings/{id}/cancel)
+- Create a booking
+- Cancel a booking
 - Fetch all bookings or by ID
+- User get their own bookings detail
 - Bookings keep status (CANCELLED) instead of being deleted
 
 ## DTO + Mapper Architecture
@@ -33,23 +40,71 @@
 
 # 🛠 Tech Stack
 
-- Backend Framework: Spring Boot (Java 21)
+- Backend Framework: Spring Boot 3.5.5 (Java 21)
 - Database: PostgreSQL (via Spring Data JPA)
 - Build Tool: Maven
 - Containerization: Docker & Docker Compose
 - API Testing: Postman
+- API Documentation: Swagger/OpenAPI
 
 # 📂 Project Structure
 
 ```text
 src/main/java/com/bookingsystem/booking/
-├─ controllers/        # REST controllers (User, Room, Booking)
-├─ dto/                # Request & Response DTOs
-├─ mappers/            # Entity ↔ DTO converters
-├─ models/             # JPA entities
-|├─ enums/
-├─ repositories/       # Spring Data JPA repositories
-└─ services/           # Business logic
+|
+├─ booking
+| ├─ api
+| | ├─ controllers
+| | ├─ dtos
+| | | ├─ request
+| | | ├─ response
+| | ├─ mappers
+| ├─ data
+| ├─ domain
+| | ├─ entities
+| | ├─ enums
+| ├─ service
+|
+├─ room
+| ├─ api
+| | ├─ controllers
+| | ├─ dtos
+| | | ├─ request
+| | | ├─ response
+| | ├─ mappers
+| ├─ data
+| ├─ domain
+| | ├─ entities
+| | ├─ enums
+| ├─ service
+|
+├─ shared
+| ├─ auth
+| | ├─ api
+| | ├─ dto
+| | | ├─ request
+| | | ├─ response
+| | ├─ service
+| | ├─ tokens
+| ├─ config
+| ├─ crypto
+| ├─ error
+| | ├─ exception
+| | ├─ handler
+| ├─ security
+|
+├─ user
+| ├─ api
+| | ├─ controllers
+| | ├─ dtos
+| | | ├─ request
+| | | ├─ response
+| | ├─ mappers
+| ├─ data
+| ├─ domain
+| | ├─ entities
+| | ├─ enums
+└─── service
 ```
 
 # 📡 API Endpoints
