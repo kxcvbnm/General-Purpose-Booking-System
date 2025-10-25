@@ -58,6 +58,10 @@ public class AuthService {
         throw new ConflictException("Email already exists");
         }
 
+        if (userRepository.existsByUsernameIgnoreCase(req.username())) {
+        throw new ConflictException("Username already exists");
+        }
+
         User user = new User();
         user.setEmail(req.email().trim().toLowerCase());
         user.setUsername(req.username().trim());
