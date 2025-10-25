@@ -149,5 +149,5 @@ src/main/java/com/bookingsystem/booking/
 - [x] Add validation
 - [x] Add global exception handling
 - [x] Add authentication & JWT
-- [ ] Swagger/OpenAPI
+- [x] Swagger/OpenAPI
 - [ ] Deploy
