@@ -16,7 +16,10 @@ import io.swagger.v3.oas.annotations.servers.Server;
             name = "Khunanont Titayanunt",
             email = "khunanont.ti@gmail.com"
         ),
-        description = "Booking System API Documentation",
+        description = "REST API for rooms and bookings with JWT auth.\r\n" + //
+                        " - Time window: bookings between 08:00–19:00, duration 1–2 hours, no overlaps.\r\n" + //
+                        " - Roles: USER, ADMIN.\r\n" + //
+                        " - Errors use structured payloads with business rule details.",
         title = "Booking System API - Khunanont Titayanunt",
         version = "1.0.0"
     ),
