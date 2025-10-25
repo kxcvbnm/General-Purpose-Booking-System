@@ -1,7 +1,5 @@
 # 📘 General-Purpose Booking System
 
-# 🚧 This project is under active development.
-
 > A Spring Boot + PostgreSQL based booking system that can be adapted to different use cases such as music rooms, table tennis courts, or study rooms. Showcase clean backend architecture, DTO usage, include JWT and best practices for real-world systems.
 
 # 🚀 Features
@@ -14,13 +12,16 @@
 
 ## User Management
 
-- Create, fetch, and delete users
+- Fetch users
+- Delete users
 - Roles: USER, ADMIN
 - Passwords safely hidden from API responses
 
 ## Room Management
 
-- Create and fetch rooms
+- Create rooms
+- Fetch Rooms
+- Delete rooms
 - Designed to be extendable (different room types, availability slots)
 
 ## Booking Management
@@ -45,7 +46,7 @@
 - Build Tool: Maven
 - Containerization: Docker & Docker Compose
 - API Testing: Postman
-- API Documentation: Swagger/OpenAPI
+- API Documentation: SwaggerUI/OpenAPI
 
 # 📂 Project Structure
 
@@ -180,4 +181,3 @@ src/main/java/com/bookingsystem/booking/
 - [x] Add global exception handling
 - [x] Add authentication & JWT
 - [x] Swagger/OpenAPI
-- [ ] Deploy
