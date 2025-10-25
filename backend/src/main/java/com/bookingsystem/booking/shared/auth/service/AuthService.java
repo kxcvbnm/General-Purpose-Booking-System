@@ -81,9 +81,9 @@ public class AuthService {
         return UserMapper.toDto(saved);
     }
 
-
     @Transactional
     public TokenResponse login(LoginRequest req) {
+        
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(req.email(), req.password());
         Authentication authentication = authenticationManager.authenticate(authRequest);
 
