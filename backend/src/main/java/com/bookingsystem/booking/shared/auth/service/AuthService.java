@@ -55,11 +55,20 @@ public class AuthService {
     public UserDTO register(RegisterRequest req) {
 
         if (userRepository.existsByEmailIgnoreCase(req.email())) {
-        throw new ConflictException("Email already exists");
+            throw new ConflictException("Email already exists");
         }
 
         if (userRepository.existsByUsernameIgnoreCase(req.username())) {
-        throw new ConflictException("Username already exists");
+            throw new ConflictException("Username already exists");
+        }
+
+        if (req.password() == null || req.password().isBlank() || 
+        req.confirmPassword() == null || req.confirmPassword().isBlank()) {
+            throw new ConflictException("Password is required");
+        }
+
+        if (req.password() != req.confirmPassword()) {
+            throw new ConflictException("Password does not match");
         }
 
         User user = new User();
