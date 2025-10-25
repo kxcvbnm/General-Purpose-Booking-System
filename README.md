@@ -107,6 +107,16 @@ src/main/java/com/bookingsystem/booking/
 └─── service
 ```
 
+# SwaggerUI/OpenAPI
+
+## SwaggerUI ![Swagger UI](https://img.shields.io/badge/Swagger-UI-blue)
+
+[Swagger UI <--](http://localhost:8082/swagger-ui.html)
+
+## OpenAPI JSON ![OpenAPI 3.0](https://img.shields.io/badge/OpenAPI-3.0-brightgreen)
+
+[OpenAPI <--](http://localhost:8082/v3/api-docs)
+
 # 📡 API Endpoints
 
 ## Authentication
