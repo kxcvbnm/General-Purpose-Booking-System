@@ -63,6 +63,9 @@ public class UserService {
             .orElseThrow(() -> new NotFoundException("User not found " + id));
         
         if(req.username() != null && !req.username().isBlank()) {
+            if(userRepository.existsByUsernameIgnoreCaseAndIdNot(req.username(), id)) {
+                throw new ConflictException("Username already exists");
+            }
             user.setUsername(req.username().trim());
         }
 
