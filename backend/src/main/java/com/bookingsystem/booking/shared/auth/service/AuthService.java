@@ -2,6 +2,7 @@ package com.bookingsystem.booking.shared.auth.service;
 
 import java.time.OffsetDateTime;
 import static java.time.ZoneOffset.UTC;
+import java.util.Objects;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -54,6 +55,18 @@ public class AuthService {
     @Transactional
     public UserDTO register(RegisterRequest req) {
 
+        String email = req.email().trim().toLowerCase();
+        String username = req.username().trim(); 
+
+        if (email.contains(" ") || username.contains(" ") || req.password().contains(" ")
+            || req.confirmPassword().contains(" ")) {
+            throw new ConflictException("Spaces are not allowed in username, email, or password.");
+        }
+
+        if (!Objects.equals(req.password(), req.confirmPassword())) {
+            throw new ConflictException("password and confirmPassword do not match");
+        }
+
         if (userRepository.existsByEmailIgnoreCase(req.email())) {
             throw new ConflictException("Email already exists");
         }
@@ -62,18 +75,9 @@ public class AuthService {
             throw new ConflictException("Username already exists");
         }
 
-        if (req.password() == null || req.password().isBlank() || 
-        req.confirmPassword() == null || req.confirmPassword().isBlank()) {
-            throw new ConflictException("Password is required");
-        }
-
-        if (req.password() != req.confirmPassword()) {
-            throw new ConflictException("Password does not match");
-        }
-
         User user = new User();
-        user.setEmail(req.email().trim().toLowerCase());
-        user.setUsername(req.username().trim());
+        user.setEmail(req.email());
+        user.setUsername(req.username());
         user.setPassword(passwordHasher.hash(req.password()));
         user.setRole(Role.USER);
         
