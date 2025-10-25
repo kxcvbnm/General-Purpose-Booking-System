@@ -1,6 +1,23 @@
 # 📘 General-Purpose Booking System
 
-> A Spring Boot + PostgreSQL based booking system that can be adapted to different use cases such as music rooms, table tennis courts, or study rooms. Showcase clean backend architecture, DTO usage, include JWT and best practices for real-world systems.
+> ## Why this project exists
+>
+> I started this project to solve a very real problem I face as students. My university’s music rooms open for booking at 08:00—onsite only. If you’re not physically there right on time, all slots are gone. That means early commutes, long lines, and lots of frustration just to secure a practice session.
+
+> ## What I'm building
+>
+> A reliable, fair, and transparent booking system that:
+
+- Enforces the official 08:00 booking window and prevents early grabs
+- Shows real-time availability and stops overlapping or double bookings
+- Lets students book remotely with clear rules (slot lengths, limits, cancellations)
+- Gives admins simple tools to manage rooms, set policies, and audit usage
+
+Result: No more 8 AM rushes, fewer empty rooms, and more predictable practice time.
+
+> ## What's about
+>
+> A flexible booking system powered by Spring Boot and PostgreSQL, designed to fit multiple use cases (music rooms, table-tennis courts, study rooms, etc.). It showcases a clean, scalable backend architecture with DTO-first endpoints, real-world validation (overlap checks, time-window rules), global exception handling, JWT authentication, and hashed passwords/tokens stored securely—following best practices for production-grade systems.
 
 # 🚀 Features
 
@@ -109,14 +126,6 @@ src/main/java/com/bookingsystem/booking/
 ```
 
 # SwaggerUI/OpenAPI
-
-## SwaggerUI ![Swagger UI](https://img.shields.io/badge/Swagger-UI-blue)
-
-[Swagger UI <--](http://localhost:8082/swagger-ui.html)
-
-## OpenAPI JSON ![OpenAPI 3.0](https://img.shields.io/badge/OpenAPI-3.0-brightgreen)
-
-[OpenAPI <--](http://localhost:8082/v3/api-docs)
 
 ## Booking
 
