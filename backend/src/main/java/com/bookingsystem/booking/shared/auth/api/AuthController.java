@@ -42,7 +42,7 @@ public class AuthController {
             ),
             @ApiResponse(
                 responseCode = "409",
-                description = "email or password is already in use"
+                description = "email or username is already in use"
             ),
         }
     )
