@@ -20,6 +20,8 @@ import com.bookingsystem.booking.booking.api.dtos.response.BookingDTO;
 import com.bookingsystem.booking.booking.service.BookingService;
 import com.bookingsystem.booking.shared.security.UserPrincipal;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -33,6 +35,24 @@ public class BookingController {
     }
 
     // User create booking
+    @Operation(
+        description = "Create a new booking (Authenticated)",
+        summary = "Create a new booking (Authenticated)",
+        responses = {
+            @ApiResponse(
+                responseCode = "201",
+                description = "Created Success"
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "Unauthorized"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token"
+            )
+        }
+    )
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<BookingDTO> createBooking(@Valid @RequestBody BookingRequest bookingRequest,
@@ -53,24 +73,96 @@ public class BookingController {
         return ResponseEntity.created(location).body(body); // 201 Created
     }
 
+    @Operation(
+        description = "Get my bookings (Authenticated)",
+        summary = "Get my bookings (Authenticated)",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Success"
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "Unauthorized"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token"
+            )
+        }
+    )
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<BookingDTO>> myBookings(@AuthenticationPrincipal UserPrincipal user) {
         return  ResponseEntity.ok(bookingService.getBookingsForUser(user.getId()));
     }
 
+    @Operation(
+        description = "Cancel my booking (Authenticated)",
+        summary = "Cancel my booking (Authenticated)",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Success"
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "Unauthorized"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token"
+            )
+        }
+    )
     @PutMapping("/{id}/cancel")
     @PreAuthorize("@policy.canModifyBooking(#id, authentication)")
     public ResponseEntity<BookingDTO> cancelBooking(@PathVariable Long id) {
         return ResponseEntity.ok(bookingService.cancelBooking(id));
     }
 
+    @Operation(
+        description = "Get all bookings (ADMIN)",
+        summary = "Get all bookings (ADMIN)",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Success"
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "Unauthorized"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token"
+            )
+        }
+    )
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<BookingDTO>> getAllBookings() {
         return ResponseEntity.ok(bookingService.getAllBookings());
     }
 
+    @Operation(
+        description = "Get booking by id (Authenticated)",
+        summary = "Get booking by id (Authenticated)",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Success"
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "Unauthorized"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token"
+            )
+        }
+    )
     @GetMapping("/{id}")
     @PreAuthorize("@policy.canViewBooking(#id, authentication)")
     public ResponseEntity<BookingDTO> getBookingById(@PathVariable Long id) {

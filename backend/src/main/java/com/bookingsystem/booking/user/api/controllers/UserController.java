@@ -19,6 +19,8 @@ import com.bookingsystem.booking.user.api.dtos.request.UserUpdateRequest;
 import com.bookingsystem.booking.user.api.dtos.response.UserDTO;
 import com.bookingsystem.booking.user.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 
 
@@ -38,24 +40,96 @@ public class UserController {
     //     return ResponseEntity.status(201).body(body); // 201 Created
     // }
 
+    @Operation(
+        description = "Get own user profile (Authenticated)",
+        summary = "Get own user profile (Authenticated)",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Success"
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "Unauthorized"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token"
+            )
+        }
+    )
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> getCurrentUser(@AuthenticationPrincipal UserPrincipal user) {
         return ResponseEntity.ok(userService.getUserById(user.getId()));
     }
 
+    @Operation(
+        description = "Get all user (ADMIN)",
+        summary = "Get all user (ADMIN)",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Success"
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "Unauthorized"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token"
+            )
+        }
+    )
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDTO>> getAllUser() {
         return ResponseEntity.ok(userService.getAllUser());
     }
 
+    @Operation(
+        description = "Get user by id (ADMIN)",
+        summary = "Get user by id (ADMIN)",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Success"
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "Unauthorized"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token"
+            )
+        }
+    )
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    @Operation(
+        description = "Update own user profile (Authenticated)",
+        summary = "Update own user profile (Authenticated)",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Success"
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "Unauthorized"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token"
+            )
+        }
+    )
     @PatchMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> updateUser(@AuthenticationPrincipal UserPrincipal user, 
@@ -63,6 +137,24 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(user.getId(), req));
     }
 
+    @Operation(
+        description = "Change own password (Authenticated)",
+        summary = "Change own password (Authenticated)",
+        responses = {
+            @ApiResponse(
+                responseCode = "204",
+                description = "Success no content"
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "Unauthorized"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token"
+            )
+        }
+    )
     @PatchMapping("/me/password")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> changePassword(@AuthenticationPrincipal UserPrincipal user,
@@ -71,6 +163,24 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(
+        description = "Delete user profile (ADMIN)",
+        summary = "Delete user profile (ADMIN)",
+        responses = {
+            @ApiResponse(
+                responseCode = "204",
+                description = "Success no content"
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "Unauthorized"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token"
+            )
+        }
+    )
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {

@@ -18,6 +18,8 @@ import com.bookingsystem.booking.room.api.dtos.request.RoomCreateRequest;
 import com.bookingsystem.booking.room.api.dtos.response.RoomDTO;
 import com.bookingsystem.booking.room.service.RoomService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -30,6 +32,24 @@ public class RoomController {
         this.roomService = roomService;
     }
 
+    @Operation(
+        description = "Create a new room (ADMIN)",
+        summary = "Create a new room (ADMIN)",
+        responses = {
+            @ApiResponse(
+                responseCode = "201",
+                description = "Created Success"
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "Unauthorized"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token"
+            )
+        }
+    )
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RoomDTO> createRoom(@Valid @RequestBody RoomCreateRequest req) {
@@ -44,18 +64,72 @@ public class RoomController {
         return ResponseEntity.created(location).body(body); // 201 Created
     }
 
+    @Operation(
+        description = "Get all rooms (Authenticated)",
+        summary = "Get all rooms (Authenticated)",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Success"
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "Unauthorized"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token"
+            )
+        }
+    )
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<RoomDTO>> getAllRooms() {
         return ResponseEntity.ok(roomService.getAllRooms());
     }
 
+    @Operation(
+        description = "Get room by id (ADMIN)",
+        summary = "Get room by id (ADMIN)",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Success"
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "Unauthorized"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token"
+            )
+        }
+    )
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RoomDTO> getRoomById(@PathVariable Long id) {
         return ResponseEntity.ok(roomService.getRoomById(id));
     }
 
+    @Operation(
+        description = "delete a room (ADMIN)",
+        summary = "delete a room (ADMIN)",
+        responses = {
+            @ApiResponse(
+                responseCode = "204",
+                description = "Success no content"
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "Unauthorized"
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token"
+            )
+        }
+    )
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteRoom(@PathVariable Long id) {
