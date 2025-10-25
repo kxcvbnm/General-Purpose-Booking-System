@@ -15,7 +15,7 @@
 
 > Result: No more 8 AM rushes, fewer empty rooms, and more predictable practice time.
 
-> ## What's about
+> ## What is it about
 >
 > A flexible booking system powered by Spring Boot and PostgreSQL, designed to fit multiple use cases (music rooms, table-tennis courts, study rooms, etc.). It showcases a clean, scalable backend architecture with DTO-first endpoints, real-world validation (overlap checks, time-window rules), global exception handling, JWT authentication, and hashed passwords/tokens stored securely—following best practices for production-grade systems.
 
