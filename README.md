@@ -13,7 +13,7 @@
 > - Lets students book remotely with clear rules (slot lengths, limits, cancellations)
 > - Gives admins simple tools to manage rooms, set policies, and audit usage
 
-Result: No more 8 AM rushes, fewer empty rooms, and more predictable practice time.
+> Result: No more 8 AM rushes, fewer empty rooms, and more predictable practice time.
 
 > ## What's about
 >
