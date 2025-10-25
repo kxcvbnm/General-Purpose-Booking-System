@@ -45,6 +45,8 @@ public class BookingService {
     @Transactional
     public BookingDTO createBooking(Long userId, Long roomId, OffsetDateTime startTime, OffsetDateTime endTime) {      
         
+        openBookings();
+
         if(userId == null || roomId == null || startTime == null || endTime == null) {
             throw new BusinessRuleViolationException("Missing required fields.");
         }
@@ -130,6 +132,21 @@ public class BookingService {
         return BookingMapper.toDto(booking);
     }  
 
+    private void openBookings() {
+        ZoneId zone  = ZoneId.of(hours.timezone());   
+        LocalTime now = ZonedDateTime.now(zone).toLocalTime();
+        LocalTime open  = hours.open();               
+        LocalTime close = hours.closeBookingTime();              
+
+        boolean bookingOpen = !now.isBefore(open) && now.isBefore(close); 
+        if (!bookingOpen) {
+            throw new BusinessRuleViolationException(
+                "Booking desk is closed. You can make bookings between " + open + " and " + close +
+                " (" + hours.timezone() + ")."
+            );
+        }
+    }
+    
     private void validateBookingTime(OffsetDateTime startTime, OffsetDateTime endTime) {
     
         ZoneId zone = ZoneId.of(hours.timezone());
