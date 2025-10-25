@@ -117,6 +117,26 @@ src/main/java/com/bookingsystem/booking/
 
 [OpenAPI <--](http://localhost:8082/v3/api-docs)
 
+## Booking
+
+![SwaggerUI Booking](images/swaggerui_booking.png)
+
+## Room
+
+![SwaggerUI Room](images/swaggerui_room.png)
+
+## Auth
+
+![SwaggerUI Auth](images/swaggerui_auth.png)
+
+## User
+
+![SwaggerUI User](images/swaggerui_user.png)
+
+## Schemas
+
+![SwaggerUI Schemas](images/swaggerui_schemas.png)
+
 # 📡 API Endpoints
 
 ## Authentication
