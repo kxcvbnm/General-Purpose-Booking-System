@@ -9,5 +9,6 @@ public record HoursProperties(
 
     String timezone,
     LocalTime open,
-    LocalTime close
+    LocalTime close,
+    LocalTime closeBookingTime
 ) {}
