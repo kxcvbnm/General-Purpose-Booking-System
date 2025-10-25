@@ -5,13 +5,13 @@
 > I started this project to solve a very real problem I face as students. My university’s music rooms open for booking at 08:00—onsite only. If you’re not physically there right on time, all slots are gone. That means early commutes, long lines, and lots of frustration just to secure a practice session.
 
 > ## What I'm building
->
-> A reliable, fair, and transparent booking system that:
 
-- Enforces the official 08:00 booking window and prevents early grabs
-- Shows real-time availability and stops overlapping or double bookings
-- Lets students book remotely with clear rules (slot lengths, limits, cancellations)
-- Gives admins simple tools to manage rooms, set policies, and audit usage
+> A reliable, fair, and transparent booking system that:
+>
+> - Enforces the official 08:00 booking window and prevents early grabs
+> - Shows real-time availability and stops overlapping or double bookings
+> - Lets students book remotely with clear rules (slot lengths, limits, cancellations)
+> - Gives admins simple tools to manage rooms, set policies, and audit usage
 
 Result: No more 8 AM rushes, fewer empty rooms, and more predictable practice time.
 
